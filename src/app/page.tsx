@@ -4,8 +4,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import { ArrowRight, Code, Cpu, Database, Server } from 'lucide-react';
+import { Button } from '../components/ui/button';
 
 export default function HomePage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,12 +1,13 @@
-// src/app/layout.tsx
+// app/layout.tsx
 import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
-import CustomCursor from '@/components/ui/custom-cursor';
-import Navbar from '@/components/layout/navbar';
-import Footer from '@/components/layout/footer';
-import ChatBot from '@/components/chatbot/chat-bot';
+
 import './globals.css';
-import { ThemeProvider } from 'next-themes';
+import { ThemeProvider } from '../components/theme/theme-provider';
+import CustomCursor from '../components/ui/custom-cursor';
+import Navbar from '../components/layout/navbar';
+import Footer from '../components/layout/footer';
+import ChatBot from '../components/chatbot/chat-bot';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const poppins = Poppins({ 
@@ -27,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${poppins.variable} font-sans`} suppressHydrationWarning>
+      <body className={`${inter.variable} ${poppins.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

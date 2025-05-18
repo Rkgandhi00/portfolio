@@ -12,7 +12,7 @@ import {
   Coffee,
   Terminal
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/src/components/ui/button';
 
 // Tech skills with labels and proficiency
 const techSkills = [

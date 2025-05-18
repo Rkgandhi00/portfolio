@@ -14,9 +14,8 @@ import {
   Search,
   Tag
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { Input } from '@/src/components/ui/input';
+import { Button } from '@/src/components/ui/button';
 
 // Project Types for TypeScript
 type ProjectTag = 'React' | 'Next.js' | 'TypeScript' | 'Node.js' | 'ASP.NET' | 'MongoDB' | 'SQL' | 'Azure' | 'AWS' | 'UI/UX' | 'Mobile' | 'GraphQL';

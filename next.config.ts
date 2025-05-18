@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  // Make sure there are no custom route rewrites or redirects here
+  // that might interfere with your page routes
 };
 
-export default nextConfig;
+module.exports = nextConfig;

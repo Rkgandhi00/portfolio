@@ -4,8 +4,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send, Loader } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
+import { cn } from '@/src/lib/utils';
+
 
 // Define types for our chat messages
 type MessageType = 'user' | 'bot';

@@ -7,9 +7,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Calendar, Clock, Tag, Search, Filter, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { cn, formatDate } from '@/lib/utils';
+import { Input } from '@/src/components/ui/input';
+import { Button } from '@/src/components/ui/button';
+import { formatDate } from '@/src/lib/utils';
 
 // Define types for the blog
 type BlogCategory = 'React' | 'Next.js' | 'TypeScript' | 'Web Development' | 'DevOps' | 'Career' | 'Tutorials' | 'API Design';
