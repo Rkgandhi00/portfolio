@@ -18,31 +18,44 @@ module.exports = {
     },
     extend: {
       colors: {
-        // Use explicit color values instead of CSS variables
-        background: "#ffffff",
-        foreground: "#0f1729",
-        card: "#ffffff",
-        "card-foreground": "#0f1729",
-        popover: "#ffffff",
-        "popover-foreground": "#0f1729",
-        primary: "#0f172a",
-        "primary-foreground": "#f8fafc",
-        secondary: "#f1f5f9",
-        "secondary-foreground": "#0f172a",
-        muted: "#f1f5f9",
-        "muted-foreground": "#64748b",
-        accent: "#f1f5f9",
-        "accent-foreground": "#0f172a",
-        destructive: "#ef4444",
-        "destructive-foreground": "#f8fafc",
-        border: "#e2e8f0",
-        input: "#e2e8f0",
-        ring: "#0f1729",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
       },
       borderRadius: {
-        lg: "0.5rem",
-        md: "calc(0.5rem - 2px)",
-        sm: "calc(0.5rem - 4px)",
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],

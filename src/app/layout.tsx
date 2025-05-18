@@ -28,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${poppins.variable} font-sans`}>
+      <body className={`${inter.variable} ${poppins.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -36,7 +36,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <CustomCursor />
-          <div className="flex min-h-screen flex-col">
+          <div className="flex min-h-screen flex-col bg-background text-foreground">
             <Navbar />
             <main className="flex-1">
               {children}
