@@ -24,79 +24,126 @@ import { Textarea } from '@/src/components/ui/textarea';
 const experienceData = [
   {
     role: "Senior Software Developer",
-    company: "TechCorp Inc.",
-    period: "2022 - Present",
-    location: "San Francisco, CA",
-    description: "Lead development teams in building enterprise-level applications using React, TypeScript, and .NET Core. Architect cloud solutions on Azure, implement CI/CD pipelines, and mentor junior developers.",
+    company: "SunsetGrown",
+    period: "2023 - Present",
+    location: "Remote",
+    description: "Leading the development of a comprehensive cloud-based platform for agricultural management using .NET 9, Angular 16, and Azure services. Implementing Azure Active Directory, ADB2C for user management, and designing low-level architecture using Clean Architecture principles.",
     achievements: [
-      "Reduced application load time by 60% through optimization techniques",
-      "Led migration from legacy system to modern microservices architecture",
-      "Implemented automated testing that improved code coverage from 40% to 85%",
-      "Developed reusable component library used across 5 major company projects"
+      "Implemented Azure AD and ADB2C integration for user management",
+      "Designed and implemented Clean Architecture principles",
+      "Set up Azure DevOps CI/CD pipelines",
+      "Implemented Infrastructure as Code with Terraform",
+      "Developed high-performance cloud solution with Azure App Services",
+      "Created frontend with Angular 16 and PrimeNG",
+      "Integrated weather and AI cognitive services"
+    ]
+  },
+  {
+    role: "Senior Software Developer",
+    company: "Phillips",
+    period: "2023",
+    location: "Remote",
+    description: "Led the development of a comprehensive microservices platform serving various business needs including machinery monitoring, skill development, social media, ed-Tech, and e-commerce. The platform serves 30K+ active users across multiple services.",
+    achievements: [
+      "Implemented IdentityServer4 for SSO",
+      "Integrated Azure services (Service Bus, Event Bus, Functions)",
+      "Implemented gRPC and HTTP abstraction for microservices",
+      "Optimized performance with LINQ and ADO.NET",
+      "Integrated multiple third-party services",
+      "Implemented social login functionality",
+      "Integrated payment gateway systems"
     ]
   },
   {
     role: "Software Developer",
-    company: "InnovateSoft",
-    period: "2019 - 2022",
-    location: "Austin, TX",
-    description: "Developed full-stack web applications using React, Node.js, and MongoDB. Worked in an agile environment, participating in all phases of the software development lifecycle.",
+    company: "TOPS",
+    period: "2022",
+    location: "Remote",
+    description: "Developed a comprehensive back-office system for retail accounts to validate, process, execute and acknowledge trades created by account managers with their corresponding confirmations from brokers.",
     achievements: [
-      "Built and maintained RESTful APIs serving 10,000+ daily active users",
-      "Implemented authentication system with multi-factor security features",
-      "Developed real-time notification feature using WebSockets",
-      "Contributed to open-source projects maintained by the company"
+      "Migrated from legacy system to microservices architecture",
+      "Implemented Entity Framework with Code-First approach",
+      "Integrated Okta OAuth 2.0 for authentication",
+      "Implemented Event Bus with RabbitMQ",
+      "Created SSIS packages for data migration",
+      "Integrated AWS S3 for storage",
+      "Developed automation scripts with Python"
     ]
   },
   {
-    role: "Junior Developer",
-    company: "WebSolutions Ltd.",
-    period: "2017 - 2019",
-    location: "Chicago, IL",
-    description: "Started as a front-end developer working with HTML, CSS, and JavaScript. Gradually took on full-stack responsibilities with React and Express.js.",
+    role: "IoT Engineer",
+    company: "Smart Medicine Vending",
+    period: "2021",
+    location: "Remote",
+    description: "Built a smart medicine dispenser using Raspberry Pi, Arduino, IR Sensors, QR Scanner, and Azure IoT Hub. The system includes a cloud-based dashboard for real-time inventory monitoring and integrates payment gateways with RFID authentication.",
     achievements: [
-      "Developed responsive designs for 15+ client websites",
-      "Implemented e-commerce functionality for small business clients",
-      "Created and maintained WordPress plugins for content management",
-      "Assisted in database design and optimization for web applications"
+      "Integrated Raspberry Pi and Arduino systems",
+      "Implemented IR Sensors and QR Scanner functionality",
+      "Integrated Azure IoT Hub for device management",
+      "Developed real-time inventory monitoring system",
+      "Integrated payment gateway systems",
+      "Implemented RFID authentication system",
+      "Created cloud-based monitoring dashboard"
+    ]
+  },
+  {
+    role: "IoT Engineer",
+    company: "Industrial IoT",
+    period: "2021",
+    location: "Remote",
+    description: "Led the architecture for Edge computing, integrating PLC (Siemens, Allen Bradley), DCS, and cloud-based analytics. Designed SCADA-integrated industrial automation system for machine status tracking and predictive maintenance.",
+    achievements: [
+      "Designed Edge computing architecture",
+      "Integrated PLC and DCS systems",
+      "Implemented SCADA system",
+      "Developed predictive maintenance system",
+      "Set up LoRaWAN wireless sensor network",
+      "Implemented real-time data logging",
+      "Created cloud-based analytics platform"
+    ]
+  },
+  {
+    role: "IoT Engineer",
+    company: "Smart Greenhouse",
+    period: "2020",
+    location: "Remote",
+    description: "Developed an AI-driven temperature and humidity control system using ESP32, DHT11 sensors, and MQTT protocol. Integrated Azure Cognitive Services for anomaly detection in crop growth.",
+    achievements: [
+      "Integrated ESP32 and DHT11 sensors",
+      "Implemented MQTT protocol",
+      "Integrated Azure Cognitive Services",
+      "Developed anomaly detection system",
+      "Created automated climate control system",
+      "Implemented real-time monitoring system",
+      "Developed data analytics dashboard"
     ]
   }
 ];
 
 const educationData = [
   {
-    degree: "Master of Science in Computer Science",
-    institution: "University of Technology",
-    period: "2016 - 2018",
-    location: "Boston, MA",
-    description: "Specialized in software engineering and distributed systems. Thesis on optimizing database performance in cloud environments.",
-    courses: [
-      "Advanced Algorithms",
-      "Cloud Computing",
-      "Distributed Systems",
-      "Machine Learning Fundamentals"
-    ]
-  },
-  {
-    degree: "Bachelor of Science in Computer Engineering",
-    institution: "State University",
+    degree: "Bachelor of Engineering in Electronics & Communication",
+    institution: "Gujarat Technological University",
     period: "2012 - 2016",
-    location: "Chicago, IL",
-    description: "Focused on computer architecture, programming fundamentals, and software development methodologies.",
+    location: "Gujarat, India",
+    description: "Focused on electronics, communication systems, and embedded systems development.",
     courses: [
-      "Data Structures and Algorithms",
-      "Object-Oriented Programming",
-      "Database Systems",
-      "Web Development"
+      "Digital Electronics",
+      "Communication Systems",
+      "Embedded Systems",
+      "Microcontrollers",
+      "Signal Processing",
+      "Computer Networks"
     ]
   }
 ];
 
 const certifications = [
   "Microsoft Certified: Azure Developer Associate (2023)",
+  "Microsoft Certified: Azure Solutions Architect Expert (2023)",
+  "Microsoft Certified: Azure DevOps Engineer Expert (2022)",
   "AWS Certified Developer - Associate (2022)",
-  "MongoDB Certified Developer (2021)",
-  "React.js Certification - Advanced Concepts (2020)"
+  "Docker Certified Associate (2021)"
 ];
 
 // Contact form initial state

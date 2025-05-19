@@ -16,20 +16,21 @@ import { Button } from '@/src/components/ui/button';
 
 // Tech skills with labels and proficiency
 const techSkills = [
-  { name: "React", category: "Frontend", icon: "/icons/react.svg", proficiency: 95 },
+  { name: "C#", category: "Languages", icon: "/icons/csharp.svg", proficiency: 95 },
+  { name: ".NET", category: "Backend", icon: "/icons/dotnet.svg", proficiency: 95 },
+  { name: "Angular", category: "Frontend", icon: "/icons/angular.svg", proficiency: 90 },
+  { name: "React", category: "Frontend", icon: "/icons/react.svg", proficiency: 85 },
   { name: "TypeScript", category: "Languages", icon: "/icons/typescript.svg", proficiency: 90 },
-  { name: "Next.js", category: "Frontend", icon: "/icons/nextjs.svg", proficiency: 85 },
-  { name: "JavaScript", category: "Languages", icon: "/icons/javascript.svg", proficiency: 95 },
-  { name: "HTML/CSS", category: "Frontend", icon: "/icons/html5.svg", proficiency: 90 },
-  { name: "Node.js", category: "Backend", icon: "/icons/nodejs.svg", proficiency: 80 },
-  { name: "ASP.NET Core", category: "Backend", icon: "/icons/dotnet.svg", proficiency: 85 },
-  { name: "C#", category: "Languages", icon: "/icons/csharp.svg", proficiency: 85 },
-  { name: "SQL", category: "Database", icon: "/icons/sql.svg", proficiency: 80 },
-  { name: "MongoDB", category: "Database", icon: "/icons/mongodb.svg", proficiency: 75 },
-  { name: "Azure", category: "DevOps", icon: "/icons/azure.svg", proficiency: 80 },
-  { name: "Git", category: "Tools", icon: "/icons/git.svg", proficiency: 90 },
-  { name: "Docker", category: "DevOps", icon: "/icons/docker.svg", proficiency: 75 },
-  { name: "GraphQL", category: "Backend", icon: "/icons/graphql.svg", proficiency: 70 },
+  { name: "SQL", category: "Database", icon: "/icons/sql.svg", proficiency: 90 },
+  { name: "Azure", category: "Cloud", icon: "/icons/azure.svg", proficiency: 90 },
+  { name: "DevOps", category: "DevOps", icon: "/icons/devops.svg", proficiency: 85 },
+  { name: "Docker", category: "DevOps", icon: "/icons/docker.svg", proficiency: 85 },
+  { name: "Kubernetes", category: "DevOps", icon: "/icons/kubernetes.svg", proficiency: 80 },
+  { name: "IoT", category: "IoT", icon: "/icons/iot.svg", proficiency: 85 },
+  { name: "Python", category: "Languages", icon: "/icons/python.svg", proficiency: 80 },
+  { name: "Java", category: "Languages", icon: "/icons/java.svg", proficiency: 75 },
+  { name: "AWS", category: "Cloud", icon: "/icons/aws.svg", proficiency: 80 },
+  { name: "Terraform", category: "DevOps", icon: "/icons/terraform.svg", proficiency: 75 },
 ];
 
 // Values data
@@ -152,19 +153,19 @@ export default function AboutPage() {
             className="space-y-6"
           >
             <h2 className="text-3xl font-bold">Rushabh Gandhi</h2>
-            <h3 className="text-xl text-primary">Senior Software Developer</h3>
+            <h3 className="text-xl text-primary">Full-Stack Developer & IoT Engineer</h3>
             
             <div className="space-y-4 text-muted-foreground">
               <p>
-                With over 6 years of experience in software development, I've dedicated my career to crafting robust, user-friendly applications that solve real-world problems. My journey in tech started with a deep curiosity about how digital products shape our lives.
+                Results-driven Full-Stack Developer & IoT Engineer with 6+ years of experience in designing and developing scalable web applications, cloud-based solutions, and IoT-integrated systems. Strong expertise in .NET Core, Angular, React, Azure, and DevOps for building high-performance, secure applications.
               </p>
               
               <p>
-                I specialize in building modern web applications with React, TypeScript, and .NET technologies. My expertise spans the entire development lifecycle — from architecture and implementation to deployment and maintenance.
+                Skilled in architecting microservices, optimizing cloud infrastructures, and implementing CI/CD pipelines to enhance system reliability and efficiency. Additionally, experienced in IoT and Industry 4.0 solutions, integrating RFID, sensors, SCADA, PLCs, and Edge computing for real-time data processing and automation.
               </p>
               
               <p>
-                Beyond coding, I'm passionate about creating developer experiences that promote efficiency and joy. I believe that clean code, thoughtful architecture, and empathetic collaboration are the foundations of great software.
+                Passionate about leveraging cloud, AI, and IoT to drive innovation in industries like Capital Markets, Social Media Apps, Agriculture, Manufacturing, and Healthcare. Fluent in English, Gujarati, and Hindi with professional proficiency.
               </p>
             </div>
             

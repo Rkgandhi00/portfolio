@@ -4,6 +4,7 @@ import { Inter, Poppins } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '../components/theme/theme-provider';
 import Navbar from '../components/layout/navbar';
+import ChatBot from '../components/chatbot/chat-bot';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const poppins = Poppins({ 
@@ -38,6 +39,7 @@ export default function RootLayout({
           <main className="min-h-screen">
             {children}
           </main>
+          <ChatBot />
         </ThemeProvider>
       </body>
     </html>

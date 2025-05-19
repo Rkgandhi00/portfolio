@@ -235,8 +235,8 @@
 }
 
 .light-theme .welcome-text {
-  color: #1e3a8a; /* blue-900 */
-  text-shadow: 0 0 10px rgba(30, 58, 138, 0.3);
+  color: #f59e0b; /* dark orange */
+  text-shadow: 0 0 10px rgba(255, 140, 0, 0.25);
 }
 
 /* Name text with glow */
@@ -253,10 +253,10 @@
 }
 
 .light-theme .name-text {
-  background: linear-gradient(to right, #1d4ed8, #4338ca);
+  background: linear-gradient(to right, #d97706, #000000);
   -webkit-background-clip: text;
   background-clip: text;
-  text-shadow: 0 0 15px rgba(29, 78, 216, 0.4);
+  text-shadow: 0 0 15px rgba(255, 140, 0, 0.25);
 }
 
 /* Typing cursor */
@@ -302,7 +302,7 @@
 }
 
 .light-theme .role-text {
-  color: #1e40af; /* blue-800 */
+  color: #af8807;
 }
 
 /* CTA buttons */
@@ -317,8 +317,9 @@
 }
 
 .light-theme .cta-button-primary {
-  background: linear-gradient(45deg, #2563eb, #6366f1);
-  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+  background: linear-gradient(45deg, #FF8800, #FF7300);
+  box-shadow: 0 4px 15px rgba(255, 140, 0, 0.18);
+  color: #ffffff;
 }
 
 .cta-button-primary:hover {
@@ -357,13 +358,15 @@
 }
 
 .light-theme .cta-button-secondary {
-  border: 1px solid rgba(37, 99, 235, 0.3); /* blue-600 at 30% opacity */
-  color: #2563eb; /* blue-600 */
+  border: 1px solid #FF8800;
+  color: #FF7300;
+  background: #fff3e0;
 }
 
 .cta-button-secondary:hover {
-  background: rgba(147, 197, 253, 0.1);
-  backdrop-filter: blur(10px);
+  background: #ffe0b2;
+  color: #FF8800;
+  border-color: #FF7300;
 }
 
 /* Animations */

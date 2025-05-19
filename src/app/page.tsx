@@ -28,10 +28,11 @@ export default function Home() {
   // Roles to display one by one
   const roles = [
     "Full Stack Developer",
+    "IoT Developer",
     "Data Engineer",
-    "AI/ML Specialist",
-    "Cloud Architect",
-    "DevOps Engineer"
+    "Cloud Developer",
+    "DevOps Engineer",
+    "AI/ML Developer"
   ];
   
   // References for canvas elements
@@ -164,7 +165,7 @@ export default function Home() {
     const particleCount = 100;
     const colors = isDarkTheme !== false ? 
       ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#f43f5e'] : 
-      ['#2563eb', '#4338ca', '#9333ea', '#c026d3', '#e11d48'];
+      ['#0ea5e9', '#22c55e', '#eab308', '#f59e0b', '#ef4444'];
     
     // Define min and max distance constants
     const minDistance = 100; // Keep away from the center

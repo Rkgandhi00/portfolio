@@ -18,7 +18,7 @@ import { Input } from '@/src/components/ui/input';
 import { Button } from '@/src/components/ui/button';
 
 // Project Types for TypeScript
-type ProjectTag = 'React' | 'Next.js' | 'TypeScript' | 'Node.js' | 'ASP.NET' | 'MongoDB' | 'SQL' | 'Azure' | 'AWS' | 'UI/UX' | 'Mobile' | 'GraphQL';
+type ProjectTag = 'React' | 'Next.js' | 'TypeScript' | 'Node.js' | 'ASP.NET' | 'MongoDB' | 'SQL' | 'Azure' | 'AWS' | 'UI/UX' | 'Mobile' | 'GraphQL' | 'C#' | '.NET' | 'Angular' | 'DevOps' | 'Java' | 'GenAI' | 'AI/ML' | 'Data Engineering' | 'MCP' | 'Docker' | 'Kubernetes' | 'Python';
 
 interface Project {
   id: string;
@@ -37,153 +37,149 @@ interface Project {
 // Sample projects data
 const projects: Project[] = [
   {
-    id: 'ecommerce-platform',
-    title: 'E-commerce Platform',
-    description: 'A modern e-commerce platform with advanced filtering, cart functionality, and payment processing',
-    longDescription: 'A comprehensive e-commerce solution built with Next.js for frontend and Node.js for backend services. The platform features product management, user authentication, shopping cart, checkout process with Stripe integration, and order management. Special attention was given to performance optimization, responsive design, and accessibility.',
-    tags: ['React', 'Next.js', 'Node.js', 'MongoDB', 'TypeScript'],
+    id: 'sunsetgrown-platform',
+    title: 'SunsetGrown Platform',
+    description: 'Enterprise cloud solution for agricultural management and automation',
+    longDescription: 'Developed a comprehensive cloud-based platform for agricultural management using .NET 9, Angular 16, and Azure services. Implemented Azure Active Directory, ADB2C for user management, and designed low-level architecture using Clean Architecture principles.',
+    tags: ['C#', '.NET', 'Angular', 'Azure', 'DevOps', 'Terraform', 'SQL'],
     imageUrl: '/api/placeholder/600/400',
-    githubUrl: 'https://github.com/rushabhgandhi/ecommerce-platform',
-    liveUrl: 'https://ecommerce-demo.rushabhgandhi.dev',
+    githubUrl: 'https://github.com/rkgandhi00/sunsetgrown-platform',
     screenshots: [
       '/api/placeholder/1200/800',
       '/api/placeholder/1200/800',
       '/api/placeholder/1200/800',
     ],
     features: [
-      'Advanced product filtering and search',
-      'User authentication and profile management',
-      'Shopping cart with persistent storage',
-      'Stripe payment integration',
-      'Order tracking and history',
-      'Admin dashboard for product management',
-      'Responsive design optimized for all devices'
+      'Azure AD and ADB2C integration for user management',
+      'Clean Architecture implementation',
+      'Azure DevOps CI/CD pipelines',
+      'Infrastructure as Code with Terraform',
+      'High-performance cloud solution with Azure App Services',
+      'Frontend development with Angular 16 and PrimeNG',
+      'Integration with weather and AI cognitive services'
     ],
     year: 2023
   },
   {
-    id: 'enterprise-crm',
-    title: 'Enterprise CRM System',
-    description: 'A comprehensive customer relationship management system for enterprise clients',
-    longDescription: 'An enterprise-grade CRM system built with ASP.NET Core backend and React frontend. The system provides robust customer data management, sales pipeline tracking, reporting, and integration with third-party services. Security was a top priority, implementing role-based access control and data encryption.',
-    tags: ['React', 'ASP.NET', 'SQL', 'TypeScript', 'Azure'],
+    id: 'phillips-platform',
+    title: 'Phillips X Platform',
+    description: 'Microservices-based ecosystem for machinery monitoring and education',
+    longDescription: 'Led the development of a comprehensive microservices platform serving various business needs including machinery monitoring, skill development, social media, ed-Tech, and e-commerce. The platform serves 30K+ active users across multiple services.',
+    tags: ['C#', '.NET', 'Angular', 'Azure', 'DevOps', 'gRPC', 'SQL'],
     imageUrl: '/api/placeholder/600/400',
-    githubUrl: 'https://github.com/rushabhgandhi/enterprise-crm',
+    githubUrl: 'https://github.com/rkgandhi00/phillips-platform',
     screenshots: [
       '/api/placeholder/1200/800',
       '/api/placeholder/1200/800',
       '/api/placeholder/1200/800',
     ],
     features: [
-      'Customer data management with detailed profiles',
-      'Sales pipeline and opportunity tracking',
-      'Task management and reminders',
-      'Advanced reporting and analytics dashboard',
-      'Email integration and communication history',
-      'Role-based access control',
-      'Customizable workflow automation'
-    ],
-    year: 2022
-  },
-  {
-    id: 'health-tracker',
-    title: 'Health & Fitness Tracker',
-    description: 'A mobile-first application for tracking health metrics, exercise routines, and nutrition',
-    longDescription: 'A health and fitness tracking application built with React Native for cross-platform mobile support and a GraphQL API backend. The app allows users to track workouts, nutrition, body measurements, and health metrics. It includes visualization of progress over time, goal setting, and social features for sharing achievements.',
-    tags: ['React', 'Node.js', 'GraphQL', 'MongoDB', 'Mobile'],
-    imageUrl: '/api/placeholder/600/400',
-    githubUrl: 'https://github.com/rushabhgandhi/health-tracker',
-    liveUrl: 'https://health-tracker.rushabhgandhi.dev',
-    screenshots: [
-      '/api/placeholder/1200/800',
-      '/api/placeholder/1200/800',
-      '/api/placeholder/1200/800',
-    ],
-    features: [
-      'Workout tracking with custom routine builder',
-      'Nutrition diary and meal planning',
-      'Body measurement tracking and progress visualization',
-      'Goal setting and achievement tracking',
-      'Integration with fitness wearables',
-      'Social sharing and community features',
-      'Personalized reports and insights'
-    ],
-    year: 2021
-  },
-  {
-    id: 'smart-home-dashboard',
-    title: 'Smart Home Dashboard',
-    description: 'A central dashboard for monitoring and controlling smart home devices',
-    longDescription: 'A comprehensive IoT dashboard for smart home management, built with React and Node.js. The application interfaces with various smart home protocols to provide a unified control interface for lights, thermostats, security systems, and other connected devices. Features include automation rules, energy monitoring, and mobile control.',
-    tags: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'UI/UX'],
-    imageUrl: '/api/placeholder/600/400',
-    githubUrl: 'https://github.com/rushabhgandhi/smart-home',
-    liveUrl: 'https://smarthome.rushabhgandhi.dev',
-    screenshots: [
-      '/api/placeholder/1200/800',
-      '/api/placeholder/1200/800',
-      '/api/placeholder/1200/800',
-    ],
-    features: [
-      'Unified control for multiple smart home ecosystems',
-      'Real-time device status and monitoring',
-      'Automation rule creation and scheduling',
-      'Energy usage tracking and optimization',
-      'Security system integration and alerts',
-      'Voice command integration',
-      'Mobile-responsive design for control on the go'
-    ],
-    year: 2022
-  },
-  {
-    id: 'project-management',
-    title: 'Project Management Tool',
-    description: 'A collaborative project management application with task tracking and team coordination features',
-    longDescription: 'A comprehensive project management solution built with Next.js and ASP.NET Core. The application supports agile methodologies with features for sprint planning, backlog management, task assignment, and progress tracking. It includes real-time collaboration tools, file sharing, and integration with version control systems.',
-    tags: ['React', 'Next.js', 'ASP.NET', 'SQL', 'Azure'],
-    imageUrl: '/api/placeholder/600/400',
-    githubUrl: 'https://github.com/rushabhgandhi/project-manager',
-    screenshots: [
-      '/api/placeholder/1200/800',
-      '/api/placeholder/1200/800',
-      '/api/placeholder/1200/800',
-    ],
-    features: [
-      'Kanban and Scrum board views',
-      'Sprint planning and backlog management',
-      'Task assignment and time tracking',
-      'Real-time collaboration and commenting',
-      'File sharing and document management',
-      'Burndown charts and velocity tracking',
-      'Integration with GitHub and other version control systems'
+      'IdentityServer4 implementation for SSO',
+      'Azure services integration (Service Bus, Event Bus, Functions)',
+      'gRPC and HTTP abstraction for microservices',
+      'Performance optimization with LINQ and ADO.NET',
+      'Integration with multiple third-party services',
+      'Social login implementation',
+      'Payment gateway integration'
     ],
     year: 2023
   },
   {
-    id: 'content-management',
-    title: 'Headless CMS Platform',
-    description: 'A flexible content management system with a headless architecture for multi-channel publishing',
-    longDescription: 'A modern headless CMS built with Node.js and React. This platform allows content creators to manage structured content that can be published across multiple channels through APIs. It features a flexible content modeling system, powerful asset management, localization support, and comprehensive versioning.',
-    tags: ['React', 'Node.js', 'MongoDB', 'TypeScript', 'AWS'],
+    id: 'tops-system',
+    title: 'TOPS - Trade Operations Processing System',
+    description: 'Back-office system for retail accounts and mutual funds',
+    longDescription: 'Developed a comprehensive back-office system for retail accounts to validate, process, execute and acknowledge trades created by account managers with their corresponding confirmations from brokers.',
+    tags: ['C#', '.NET', 'Angular', 'AWS', 'SQL', 'RabbitMQ', 'SSIS'],
     imageUrl: '/api/placeholder/600/400',
-    githubUrl: 'https://github.com/rushabhgandhi/headless-cms',
-    liveUrl: 'https://cms-demo.rushabhgandhi.dev',
+    githubUrl: 'https://github.com/rkgandhi00/tops-system',
     screenshots: [
       '/api/placeholder/1200/800',
       '/api/placeholder/1200/800',
       '/api/placeholder/1200/800',
     ],
     features: [
-      'Flexible content modeling and schema building',
-      'API-first architecture for omnichannel publishing',
-      'Rich text editor with media embedding',
-      'Asset management with image processing',
-      'Content versioning and publishing workflow',
-      'Localization and internationalization support',
-      'User role management and access control'
+      'Microservices migration from legacy system',
+      'Entity Framework with Code-First approach',
+      'Okta OAuth 2.0 implementation',
+      'Event Bus with RabbitMQ',
+      'SSIS packages for data migration',
+      'AWS S3 integration',
+      'Automation scripts with Python'
+    ],
+    year: 2022
+  },
+  {
+    id: 'smart-medicine-vending',
+    title: 'Smart Medicine Vending Machine',
+    description: 'IoT-based automated medicine dispensing system',
+    longDescription: 'Built a smart medicine dispenser using Raspberry Pi, Arduino, IR Sensors, QR Scanner, and Azure IoT Hub. The system includes a cloud-based dashboard for real-time inventory monitoring and integrates payment gateways with RFID authentication.',
+    tags: ['IoT', 'Azure', 'Python', 'Raspberry Pi', 'Arduino', 'RFID'],
+    imageUrl: '/api/placeholder/600/400',
+    githubUrl: 'https://github.com/rkgandhi00/smart-medicine-vending',
+    screenshots: [
+      '/api/placeholder/1200/800',
+      '/api/placeholder/1200/800',
+      '/api/placeholder/1200/800',
+    ],
+    features: [
+      'Raspberry Pi and Arduino integration',
+      'IR Sensors and QR Scanner implementation',
+      'Azure IoT Hub integration',
+      'Real-time inventory monitoring',
+      'Payment gateway integration',
+      'RFID authentication system',
+      'Cloud-based dashboard'
     ],
     year: 2021
   },
+  {
+    id: 'industrial-iot',
+    title: 'Industrial IoT Monitoring System',
+    description: 'Industry 4.0 solution for industrial automation and monitoring',
+    longDescription: 'Led the architecture for Edge computing, integrating PLC (Siemens, Allen Bradley), DCS, and cloud-based analytics. Designed SCADA-integrated industrial automation system for machine status tracking and predictive maintenance.',
+    tags: ['IoT', 'PLC', 'SCADA', 'Edge Computing', 'LoRaWAN', 'Azure'],
+    imageUrl: '/api/placeholder/600/400',
+    githubUrl: 'https://github.com/rkgandhi00/industrial-iot',
+    screenshots: [
+      '/api/placeholder/1200/800',
+      '/api/placeholder/1200/800',
+      '/api/placeholder/1200/800',
+    ],
+    features: [
+      'Edge computing architecture',
+      'PLC and DCS integration',
+      'SCADA system implementation',
+      'Predictive maintenance system',
+      'LoRaWAN wireless sensor network',
+      'Real-time data logging',
+      'Cloud-based analytics'
+    ],
+    year: 2021
+  },
+  {
+    id: 'smart-greenhouse',
+    title: 'Smart Greenhouse Automation',
+    description: 'AI-driven temperature and humidity control system',
+    longDescription: 'Developed an AI-driven temperature and humidity control system using ESP32, DHT11 sensors, and MQTT protocol. Integrated Azure Cognitive Services for anomaly detection in crop growth.',
+    tags: ['IoT', 'AI', 'Azure', 'ESP32', 'MQTT', 'Python'],
+    imageUrl: '/api/placeholder/600/400',
+    githubUrl: 'https://github.com/rkgandhi00/smart-greenhouse',
+    screenshots: [
+      '/api/placeholder/1200/800',
+      '/api/placeholder/1200/800',
+      '/api/placeholder/1200/800',
+    ],
+    features: [
+      'ESP32 and DHT11 sensor integration',
+      'MQTT protocol implementation',
+      'Azure Cognitive Services integration',
+      'Anomaly detection in crop growth',
+      'Automated climate control',
+      'Real-time monitoring system',
+      'Data analytics dashboard'
+    ],
+    year: 2020
+  }
 ];
 
 export default function ProjectsPage() {
