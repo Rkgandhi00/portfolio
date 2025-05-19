@@ -137,10 +137,10 @@ export default function AboutPage() {
             <div className="absolute -inset-0.5 bg-gradient-to-tr from-primary to-accent rounded-lg opacity-20 blur-sm" />
             <div className="absolute inset-2 rounded-lg overflow-hidden bg-card">
               <Image 
-                src="/api/placeholder/600/700" 
+                src="/rushabh.jpeg" 
                 alt="Rushabh Gandhi" 
                 fill
-                style={{objectFit: "cover"}}
+                style={{objectFit: "scale-down"}}
                 className="rounded-lg"
               />
             </div>

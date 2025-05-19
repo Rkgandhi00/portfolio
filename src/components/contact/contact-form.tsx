@@ -7,10 +7,10 @@ import {
   MapPin, 
   Linkedin, 
   Github, 
-  Twitter,
   Send,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  X
 } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
@@ -102,8 +102,8 @@ export function ContactForm({ variant = 'page', onClose }: ContactFormProps) {
                     <Mail className="w-5 h-5 mr-3 text-primary" />
                     <div>
                       <h4 className="font-medium">Email</h4>
-                      <a href="mailto:contact@rushabhgandhi.dev" className="text-muted-foreground hover:text-primary transition-colors">
-                        contact@rushabhgandhi.dev
+                      <a href="mailto:rkgandhi00@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
+                        rkgandhi00@gmail.com
                       </a>
                     </div>
                   </div>
@@ -113,7 +113,7 @@ export function ContactForm({ variant = 'page', onClose }: ContactFormProps) {
                     <div>
                       <h4 className="font-medium">Phone</h4>
                       <a href="tel:+15551234567" className="text-muted-foreground hover:text-primary transition-colors">
-                        +1 (555) 123-4567
+                        +1 (647) 994-****
                       </a>
                     </div>
                   </div>
@@ -122,7 +122,7 @@ export function ContactForm({ variant = 'page', onClose }: ContactFormProps) {
                     <MapPin className="w-5 h-5 mr-3 text-primary" />
                     <div>
                       <h4 className="font-medium">Location</h4>
-                      <p className="text-muted-foreground">San Francisco, California</p>
+                      <p className="text-muted-foreground">Windsor, Ontario</p>
                     </div>
                   </div>
                 </div>
@@ -132,18 +132,18 @@ export function ContactForm({ variant = 'page', onClose }: ContactFormProps) {
                 <h3 className="text-xl font-semibold mb-6">Connect</h3>
                 <div className="flex space-x-4">
                   <Button variant="outline" size="icon" asChild>
-                    <Link href="https://linkedin.com/in/rushabhgandhi" target="_blank" aria-label="LinkedIn">
+                    <Link href="https://www.linkedin.com/in/rk1400/" target="_blank" aria-label="LinkedIn">
                       <Linkedin className="h-5 w-5" />
                     </Link>
                   </Button>
                   <Button variant="outline" size="icon" asChild>
-                    <Link href="https://github.com/rushabhgandhi" target="_blank" aria-label="GitHub">
+                    <Link href="https://github.com/rkgandhi00" target="_blank" aria-label="GitHub">
                       <Github className="h-5 w-5" />
                     </Link>
                   </Button>
                   <Button variant="outline" size="icon" asChild>
-                    <Link href="https://twitter.com/rushabhgandhi" target="_blank" aria-label="Twitter">
-                      <Twitter className="h-5 w-5" />
+                    <Link href="https://x.com/rk_1400" target="_blank" aria-label="Twitter">
+                      <X className="h-5 w-5" />
                     </Link>
                   </Button>
                 </div>

@@ -129,11 +129,12 @@ const educationData = [
 ];
 
 const certifications = [
+  "Docker Certified Associate (2025)",
+  "Terraform Certified Associate (2025)",
+  "Microsoft Certified: Azure Solutions Architect Expert (2024)",
   "Microsoft Certified: Azure Developer Associate (2023)",
-  "Microsoft Certified: Azure Solutions Architect Expert (2023)",
   "Microsoft Certified: Azure DevOps Engineer Expert (2022)",
   "AWS Certified Developer - Associate (2022)",
-  "Docker Certified Associate (2021)"
 ];
 
 // Contact form initial state
