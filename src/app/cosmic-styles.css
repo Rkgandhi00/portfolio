@@ -1,0 +1,502 @@
+// src/app/cosmic-styles.css
+/* Cosmic-themed landing page styles */
+
+/* Background gradients */
+.cosmic-bg {
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.light-theme .cosmic-bg {
+  background: radial-gradient(ellipse at center, #e0f2fe 0%, #bfdbfe 50%, #93c5fd 100%);
+}
+
+/* Large celestial body (moon/sun) */
+.celestial-body-container {
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  width: 50%;
+  height: 50%;
+  z-index: 1;
+  pointer-events: none;
+  animation: slow-rotate 240s linear infinite;
+  transform-origin: 80% 30%;
+}
+
+@media (max-width: 768px) {
+  .celestial-body-container {
+    top: -5%;
+    right: -20%;
+    width: 70%;
+    height: 70%;
+  }
+}
+
+.celestial-body {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 80px 20px rgba(30, 64, 175, 0.7);
+  background: radial-gradient(circle, #1e40af 0%, #1e3a8a 60%, #172554 100%);
+}
+
+.light-theme .celestial-body {
+  background: radial-gradient(circle, #fef08a 0%, #f97316 60%, #b91c1c 100%);
+  box-shadow: 0 0 100px 30px rgba(250, 204, 21, 0.7);
+}
+
+/* Sun surface details - only visible in light mode */
+.sun-surface {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' fill='%23f97316' fill-opacity='0.3'/%3E%3C/svg%3E");
+  background-size: cover;
+  mix-blend-mode: overlay;
+  animation: pulse-opacity 4s ease-in-out infinite alternate;
+}
+
+.light-theme .sun-surface {
+  opacity: 1;
+}
+
+/* Moon surface details - only visible in dark mode */
+.moon-surface {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.05' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' fill='%23e0f2fe' fill-opacity='0.15'/%3E%3C/svg%3E");
+  background-size: cover;
+  mix-blend-mode: soft-light;
+}
+
+.light-theme .moon-surface {
+  opacity: 0;
+}
+
+/* Moon craters - only visible in dark mode */
+.moon-crater {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+  opacity: 1;
+}
+
+.light-theme .moon-crater {
+  opacity: 0;
+}
+
+.crater-1 {
+  width: 20%;
+  height: 20%;
+  top: 25%;
+  left: 30%;
+}
+
+.crater-2 {
+  width: 12%;
+  height: 12%;
+  top: 50%;
+  left: 65%;
+}
+
+.crater-3 {
+  width: 15%;
+  height: 15%;
+  top: 70%;
+  left: 40%;
+}
+
+.crater-4 {
+  width: 8%;
+  height: 8%;
+  top: 35%;
+  left: 75%;
+}
+
+/* Sun prominences - only visible in light mode */
+.sun-prominence {
+  position: absolute;
+  background: linear-gradient(to right, rgba(253, 224, 71, 0.8), rgba(249, 115, 22, 0.9));
+  filter: blur(5px);
+  opacity: 0;
+  border-radius: 50%;
+}
+
+.light-theme .sun-prominence {
+  opacity: 1;
+  animation: pulse-prominence 8s ease-in-out infinite;
+}
+
+.prominence-1 {
+  width: 25%;
+  height: 12%;
+  bottom: -2%;
+  left: 30%;
+  transform: rotate(20deg);
+}
+
+.prominence-2 {
+  width: 30%;
+  height: 15%;
+  top: 10%;
+  right: -5%;
+  transform: rotate(-30deg);
+}
+
+.prominence-3 {
+  width: 20%;
+  height: 10%;
+  top: 65%;
+  right: -2%;
+  transform: rotate(15deg);
+}
+
+/* Sun corona effect - only visible in light mode */
+.sun-corona {
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(254, 240, 138, 0.5) 0%, rgba(254, 240, 138, 0.2) 30%, rgba(254, 240, 138, 0) 70%);
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+.light-theme .sun-corona {
+  opacity: 1;
+  animation: pulse-corona 10s ease-in-out infinite alternate;
+}
+
+/* Sun rays - only visible in light mode */
+.sun-ray {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: linear-gradient(to right, rgba(254, 240, 138, 0.9), rgba(254, 240, 138, 0));
+  transform-origin: 0 0;
+  height: 3px;
+  opacity: 0;
+  filter: blur(1px);
+}
+
+.light-theme .sun-ray {
+  opacity: 0.6;
+  animation: pulse-ray 4s ease-in-out infinite;
+}
+
+.ray-1 { width: 120%; height: 2px; transform: rotate(0deg); animation-delay: 0s; }
+.ray-2 { width: 100%; height: 2px; transform: rotate(30deg); animation-delay: 0.2s; }
+.ray-3 { width: 110%; height: 2px; transform: rotate(60deg); animation-delay: 0.4s; }
+.ray-4 { width: 120%; height: 2px; transform: rotate(90deg); animation-delay: 0.6s; }
+.ray-5 { width: 100%; height: 2px; transform: rotate(120deg); animation-delay: 0.8s; }
+.ray-6 { width: 110%; height: 2px; transform: rotate(150deg); animation-delay: 1s; }
+.ray-7 { width: 120%; height: 2px; transform: rotate(180deg); animation-delay: 1.2s; }
+.ray-8 { width: 100%; height: 2px; transform: rotate(210deg); animation-delay: 1.4s; }
+.ray-9 { width: 110%; height: 2px; transform: rotate(240deg); animation-delay: 1.6s; }
+.ray-10 { width: 120%; height: 2px; transform: rotate(270deg); animation-delay: 1.8s; }
+.ray-11 { width: 100%; height: 2px; transform: rotate(300deg); animation-delay: 2s; }
+.ray-12 { width: 110%; height: 2px; transform: rotate(330deg); animation-delay: 2.2s; }
+
+/* Swirling particles around celestial body */
+.particles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Stars background */
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Welcome text */
+.welcome-text {
+  position: relative;
+  display: inline-block;
+  color: white;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  z-index: 10;
+}
+
+.light-theme .welcome-text {
+  color: #1e3a8a; /* blue-900 */
+  text-shadow: 0 0 10px rgba(30, 58, 138, 0.3);
+}
+
+/* Name text with glow */
+.name-text {
+  position: relative;
+  display: inline;
+  background: linear-gradient(to right, #60a5fa, #818cf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: bold;
+  text-shadow: 0 0 15px rgba(96, 165, 250, 0.7);
+  z-index: 10;
+}
+
+.light-theme .name-text {
+  background: linear-gradient(to right, #1d4ed8, #4338ca);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 0 0 15px rgba(29, 78, 216, 0.4);
+}
+
+/* Typing cursor */
+.typing-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.8em;
+  background-color: #60a5fa; /* blue-400 */
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+}
+
+.light-theme .typing-cursor {
+  background-color: #3b82f6; /* blue-500 */
+}
+
+/* Role text */
+.role-container {
+  perspective: 1000px;
+  position: relative;
+  overflow: hidden;
+  min-height: 3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-text {
+  display: block;
+  text-align: center;
+  font-weight: 500;
+  position: absolute;
+  backface-visibility: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  transform-style: preserve-3d;
+  color: #93c5fd; /* blue-300 */
+}
+
+.role-text.active {
+  animation: fadeInUp 0.8s forwards, fadeOutDown 0.8s forwards 3.2s;
+}
+
+.light-theme .role-text {
+  color: #1e40af; /* blue-800 */
+}
+
+/* CTA buttons */
+.cta-button-primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+  border: none;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.light-theme .cta-button-primary {
+  background: linear-gradient(45deg, #2563eb, #6366f1);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.cta-button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+}
+
+.cta-button-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  transition: left 0.5s;
+}
+
+.cta-button-primary:hover::before {
+  left: 100%;
+}
+
+.cta-button-secondary {
+  background: transparent;
+  border: 1px solid rgba(147, 197, 253, 0.4); /* blue-300 at 40% opacity */
+  color: #93c5fd; /* blue-300 */
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.light-theme .cta-button-secondary {
+  border: 1px solid rgba(37, 99, 235, 0.3); /* blue-600 at 30% opacity */
+  color: #2563eb; /* blue-600 */
+}
+
+.cta-button-secondary:hover {
+  background: rgba(147, 197, 253, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* Animations */
+@keyframes slow-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-ray {
+  0%, 100% {
+    opacity: 0.4;
+    width: 100%;
+  }
+  50% {
+    opacity: 0.7;
+    width: 120%;
+  }
+}
+
+@keyframes pulse-corona {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes pulse-prominence {
+  0%, 100% {
+    transform: scale(1) rotate(var(--rotation, 0deg));
+    filter: blur(5px);
+  }
+  50% {
+    transform: scale(1.2) rotate(var(--rotation, 0deg));
+    filter: blur(7px);
+  }
+}
+
+@keyframes pulse-opacity {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* Navigation styles */
+.cosmic-nav {
+  background: rgba(15, 23, 42, 0.85); /* slate-900 at 85% opacity */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light-theme .cosmic-nav {
+  background: rgba(30, 58, 138, 0.85); /* blue-900 at 85% opacity */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #60a5fa; /* blue-400 */
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.light-theme .nav-link::after {
+  background: #93c5fd; /* blue-300 */
+}
+
+.nav-link:hover::after {
+  width: 80%;
+}
+
+.nav-link.active::after {
+  width: 80%;
+}
