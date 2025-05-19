@@ -15,7 +15,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'Rushabh Gandhi | Senior Software Developer',
+  title: 'Rushabh Gandhi | Human',
   description: 'Portfolio website showcasing the work and skills of Rushabh Gandhi, a Senior Software Developer specializing in React, .NET, and Azure.',
 };
 

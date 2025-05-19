@@ -269,7 +269,7 @@ export default function ProjectsPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            Explore the applications and solutions Ive built
+            Explore the applications and solutions I've built
           </motion.p>
         </div>
       </section>

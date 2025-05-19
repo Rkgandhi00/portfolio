@@ -28,10 +28,10 @@ export default function Home() {
   // Roles to display one by one
   const roles = [
     "Full Stack Developer",
-    "IoT Developer",
-    "Data Engineer",
     "Cloud Developer",
+    "Data Engineer",
     "DevOps Engineer",
+    "IoT Developer",
     "AI/ML Developer"
   ];
   

@@ -2,17 +2,17 @@
 "use client"
 
 import Link from 'next/link';
-import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
+import { Github, Linkedin, Mail, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   
   const socialLinks = [
-    { href: 'https://github.com/rushabhgandhi', icon: <Github size={20} />, label: 'GitHub' },
-    { href: 'https://linkedin.com/in/rushabhgandhi', icon: <Linkedin size={20} />, label: 'LinkedIn' },
-    { href: 'https://twitter.com/rushabhgandhi', icon: <Twitter size={20} />, label: 'Twitter' },
-    { href: 'mailto:contact@rushabhgandhi.dev', icon: <Mail size={20} />, label: 'Email' },
+    { href: 'https://github.com/Rkgandhi00', icon: <Github size={20} />, label: 'GitHub' },
+    { href: 'https://www.linkedin.com/in/rk1400/', icon: <Linkedin size={20} />, label: 'LinkedIn' },
+    { href: 'https://x.com/rk_1400', icon: <X size={20} />, label: 'Twitter' },
+    { href: 'mailto:rkgandhi00@gmail.com', icon: <Mail size={20} />, label: 'Email' },
   ];
 
   return (
@@ -22,7 +22,7 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-bold">Rushabh Gandhi</h3>
             <p className="text-muted-foreground">
-              Senior Software Developer specializing in modern web technologies and cloud solutions.
+              Senior Software Developer specializing in modern web technologies and cloud with data and AI solutions.
             </p>
           </div>
           

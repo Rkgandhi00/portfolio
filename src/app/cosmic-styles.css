@@ -364,11 +364,16 @@
 }
 
 .cta-button-secondary:hover {
+  background: #000000;
+  color: #93c5fd;
+  border-color: #0570ea;
+}
+
+.light-theme .cta-button-secondary:hover {
   background: #ffe0b2;
   color: #FF8800;
   border-color: #FF7300;
 }
-
 /* Animations */
 @keyframes slow-rotate {
   0% {
