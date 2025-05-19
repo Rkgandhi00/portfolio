@@ -13,11 +13,11 @@ import { ContactForm } from '@/src/components/contact/contact-form';
 // Resume data sections
 const experienceData = [
   {
-    role: "Senior Software Developer",
+    role: "Programmer Analyst",
     company: "SunsetGrown",
     period: "2023 - Present",
-    location: "Remote",
-    description: "Leading the development of a comprehensive cloud-based platform for agricultural management using .NET 9, Angular 16, and Azure services. Implementing Azure Active Directory, ADB2C for user management, and designing low-level architecture using Clean Architecture principles.",
+    location: "Kingsville, ON, Canada",
+    description: "Leading the development of a comprehensive cloud-based platform for agricultural management using .NET 8, Angular 16, React Native, Next .JS, and Azure services. Implementing Azure Active Directory, ADB2C for user management, and designing low-level architecture using Clean Architecture principles.",
     achievements: [
       "Implemented Azure AD and ADB2C integration for user management",
       "Designed and implemented Clean Architecture principles",
@@ -29,10 +29,10 @@ const experienceData = [
     ]
   },
   {
-    role: "Senior Software Developer",
-    company: "Phillips",
-    period: "2023",
-    location: "Remote",
+    role: "Software Developer",
+    company: "Sparkt",
+    period: "2022 - 2023",
+    location: "Mumbai, India",
     description: "Led the development of a comprehensive microservices platform serving various business needs including machinery monitoring, skill development, social media, ed-Tech, and e-commerce. The platform serves 30K+ active users across multiple services.",
     achievements: [
       "Implemented IdentityServer4 for SSO",
@@ -46,9 +46,9 @@ const experienceData = [
   },
   {
     role: "Software Developer",
-    company: "TOPS",
-    period: "2022",
-    location: "Remote",
+    company: "Accenture",
+    period: "2020 - 2022",
+    location: "Mumbai, India",
     description: "Developed a comprehensive back-office system for retail accounts to validate, process, execute and acknowledge trades created by account managers with their corresponding confirmations from brokers.",
     achievements: [
       "Migrated from legacy system to microservices architecture",
@@ -61,10 +61,10 @@ const experienceData = [
     ]
   },
   {
-    role: "IoT Engineer",
-    company: "Smart Medicine Vending",
-    period: "2021",
-    location: "Remote",
+    role: "Founder & CEO",
+    company: "Smart Solutions",
+    period: "2018 - 2020",
+    location: "Ahmedabad, India",
     description: "Built a smart medicine dispenser using Raspberry Pi, Arduino, IR Sensors, QR Scanner, and Azure IoT Hub. The system includes a cloud-based dashboard for real-time inventory monitoring and integrates payment gateways with RFID authentication.",
     achievements: [
       "Integrated Raspberry Pi and Arduino systems",
@@ -77,9 +77,9 @@ const experienceData = [
     ]
   },
   {
-    role: "IoT Engineer",
-    company: "Industrial IoT",
-    period: "2021",
+    role: "I&C Engineer",
+    company: "Freelance",
+    period: "2018 - Present",
     location: "Remote",
     description: "Led the architecture for Edge computing, integrating PLC (Siemens, Allen Bradley), DCS, and cloud-based analytics. Designed SCADA-integrated industrial automation system for machine status tracking and predictive maintenance.",
     achievements: [
@@ -94,8 +94,8 @@ const experienceData = [
   },
   {
     role: "IoT Engineer",
-    company: "Smart Greenhouse",
-    period: "2020",
+    company: "Freelance",
+    period: "2018 - Present",
     location: "Remote",
     description: "Developed an AI-driven temperature and humidity control system using ESP32, DHT11 sensors, and MQTT protocol. Integrated Azure Cognitive Services for anomaly detection in crop growth.",
     achievements: [
@@ -112,18 +112,34 @@ const experienceData = [
 
 const educationData = [
   {
-    degree: "Bachelor of Engineering in Electronics & Communication",
-    institution: "Gujarat Technological University",
-    period: "2012 - 2016",
-    location: "Gujarat, India",
-    description: "Focused on electronics, communication systems, and embedded systems development.",
+    degree: "Masters of Engineering in Electrical & Computer Engineering",
+    institution: "University of Windsor",
+    period: "2022 - 2023",
+    location: "Windsor, ON, India",
+    description: "Focused on electrical, and computer systems/software development.",
     courses: [
-      "Digital Electronics",
-      "Communication Systems",
-      "Embedded Systems",
-      "Microcontrollers",
-      "Signal Processing",
-      "Computer Networks"
+      "Software & DSA",
+      "System Design",
+      "Autonomous Vehicles",
+      "Artificial Intelligence",
+      "Machine Learning",
+      "Electrical Component Design",
+      "MATLAB"
+    ]
+  },
+  {
+    degree: "Bachelor of Engineering in Instrumentation & Control",
+    institution: "Gujarat Technological University",
+    period: "2015 - 2019",
+    location: "Gujarat, India",
+    description: "Focused on instrumentation, control, and automation systems development.",
+    courses: [
+      "Instrumentation",
+      "Control Systems",
+      "Automation",
+      "PLC Programming",
+      "DCS",
+      "SCADA"
     ]
   }
 ];
@@ -191,9 +207,9 @@ export default function ResumePage() {
             className="mt-8"
           >
             <Button asChild>
-              <Link href="/rushabh-gandhi-resume.pdf" target="_blank">
-                <Download className="mr-2 h-4 w-4" /> Download Resume
-              </Link>
+            <a href="/rushabh-gandhi-resume.pdf" download target="_blank" rel="noopener noreferrer">
+              <Download className="mr-2 h-4 w-4" /> Download Resume
+            </a>
             </Button>
           </motion.div>
         </div>
