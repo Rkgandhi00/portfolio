@@ -23,7 +23,7 @@ export default function Home() {
   const [isNameTyped, setIsNameTyped] = useState(false);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [showRoles, setShowRoles] = useState(false);
-  const nameToType = "Rushabh";
+  const nameToType = "Rushabh Gandhi";
   
   // Roles to display one by one
   const roles = [
@@ -251,39 +251,41 @@ export default function Home() {
       {/* Celestial body (Blue Moon in dark mode, Sun in light mode) */}
       <div className="celestial-body-container">
         <div className="celestial-body">
-          {/* Moon surface texture */}
-          <div className="moon-surface"></div>
-          
-          {/* Moon craters */}
-          <div className="moon-crater crater-1"></div>
-          <div className="moon-crater crater-2"></div>
-          <div className="moon-crater crater-3"></div>
-          <div className="moon-crater crater-4"></div>
-          
-          {/* Sun surface texture */}
-          <div className="sun-surface"></div>
-          
-          {/* Sun prominences */}
-          <div className="sun-prominence prominence-1" style={{"--rotation": "20deg"} as React.CSSProperties}></div>
-          <div className="sun-prominence prominence-2" style={{"--rotation": "-30deg"} as React.CSSProperties}></div>
-          <div className="sun-prominence prominence-3" style={{"--rotation": "15deg"} as React.CSSProperties}></div>
-          
-          {/* Sun corona */}
-          <div className="sun-corona"></div>
-          
-          {/* Sun rays */}
-          <div className="sun-ray ray-1"></div>
-          <div className="sun-ray ray-2"></div>
-          <div className="sun-ray ray-3"></div>
-          <div className="sun-ray ray-4"></div>
-          <div className="sun-ray ray-5"></div>
-          <div className="sun-ray ray-6"></div>
-          <div className="sun-ray ray-7"></div>
-          <div className="sun-ray ray-8"></div>
-          <div className="sun-ray ray-9"></div>
-          <div className="sun-ray ray-10"></div>
-          <div className="sun-ray ray-11"></div>
-          <div className="sun-ray ray-12"></div>
+          {isDarkTheme ? (
+            <>
+              {/* Moon surface texture */}
+              <div className="moon-surface"></div>
+              {/* Moon craters */}
+              <div className="moon-crater crater-1"></div>
+              <div className="moon-crater crater-2"></div>
+              <div className="moon-crater crater-3"></div>
+              <div className="moon-crater crater-4"></div>
+            </>
+          ) : (
+            <>
+              {/* Sun surface texture */}
+              <div className="sun-surface"></div>
+              {/* Sun prominences */}
+              <div className="sun-prominence prominence-1" style={{"--rotation": "20deg"} as React.CSSProperties}></div>
+              <div className="sun-prominence prominence-2" style={{"--rotation": "-30deg"} as React.CSSProperties}></div>
+              <div className="sun-prominence prominence-3" style={{"--rotation": "15deg"} as React.CSSProperties}></div>
+              {/* Sun corona */}
+              <div className="sun-corona"></div>
+              {/* Sun rays */}
+              <div className="sun-ray ray-1"></div>
+              <div className="sun-ray ray-2"></div>
+              <div className="sun-ray ray-3"></div>
+              <div className="sun-ray ray-4"></div>
+              <div className="sun-ray ray-5"></div>
+              <div className="sun-ray ray-6"></div>
+              <div className="sun-ray ray-7"></div>
+              <div className="sun-ray ray-8"></div>
+              <div className="sun-ray ray-9"></div>
+              <div className="sun-ray ray-10"></div>
+              <div className="sun-ray ray-11"></div>
+              <div className="sun-ray ray-12"></div>
+            </>
+          )}
         </div>
       </div>
       

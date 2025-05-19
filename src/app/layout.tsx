@@ -5,6 +5,7 @@ import './globals.css';
 import { ThemeProvider } from '../components/theme/theme-provider';
 import Navbar from '../components/layout/navbar';
 import ChatBot from '../components/chatbot/chat-bot';
+import Footer from '../components/layout/footer';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const poppins = Poppins({ 
@@ -40,6 +41,7 @@ export default function RootLayout({
             {children}
           </main>
           <ChatBot />
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
