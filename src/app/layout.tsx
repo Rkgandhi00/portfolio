@@ -1,13 +1,11 @@
-// app/layout.tsx
+// src/app/layout.tsx
 import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
-
 import './globals.css';
 import { ThemeProvider } from '../components/theme/theme-provider';
-import CustomCursor from '../components/ui/custom-cursor';
 import Navbar from '../components/layout/navbar';
-import Footer from '../components/layout/footer';
 import ChatBot from '../components/chatbot/chat-bot';
+import Footer from '../components/layout/footer';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const poppins = Poppins({ 
@@ -17,7 +15,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'Rushabh Gandhi | Senior Software Developer',
+  title: 'Rushabh Gandhi | Human',
   description: 'Portfolio website showcasing the work and skills of Rushabh Gandhi, a Senior Software Developer specializing in React, .NET, and Azure.',
 };
 
@@ -28,22 +26,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${poppins.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${poppins.variable} font-sans`} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <CustomCursor />
-          <div className="flex min-h-screen flex-col bg-background text-foreground">
-            <Navbar />
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          {/* Cosmic Navigation component */}
+          <Navbar />
+          
+          {/* Main content */}
+          <main className="min-h-screen">
+            {children}
+          </main>
           <ChatBot />
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

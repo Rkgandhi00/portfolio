@@ -7,6 +7,13 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.jsdelivr.net',
+        pathname: '/gh/devicons/devicon/icons/**',
+      },
+    ],
   }
   // Make sure there are no custom route rewrites or redirects here
   // that might interfere with your page routes

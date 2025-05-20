@@ -1,102 +1,156 @@
 // app/resume/page.tsx
 "use client"
 
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
 import { 
-  Download, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Linkedin, 
-  Github, 
-  Twitter,
-  Send,
-  CheckCircle,
-  AlertCircle
+  Download
 } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
-import { Input } from '@/src/components/ui/input';
-import { Textarea } from '@/src/components/ui/textarea';
+import { ContactForm } from '@/src/components/contact/contact-form';
 
 // Resume data sections
 const experienceData = [
   {
-    role: "Senior Software Developer",
-    company: "TechCorp Inc.",
-    period: "2022 - Present",
-    location: "San Francisco, CA",
-    description: "Lead development teams in building enterprise-level applications using React, TypeScript, and .NET Core. Architect cloud solutions on Azure, implement CI/CD pipelines, and mentor junior developers.",
+    role: "Programmer Analyst",
+    company: "SunsetGrown",
+    period: "2023 - Present",
+    location: "Kingsville, ON, Canada",
+    description: "Leading the development of a comprehensive cloud-based platform for agricultural management using .NET 8, Angular 16, React Native, Next .JS, and Azure services. Implementing Azure Active Directory, ADB2C for user management, and designing low-level architecture using Clean Architecture principles.",
     achievements: [
-      "Reduced application load time by 60% through optimization techniques",
-      "Led migration from legacy system to modern microservices architecture",
-      "Implemented automated testing that improved code coverage from 40% to 85%",
-      "Developed reusable component library used across 5 major company projects"
+      "Implemented Azure AD and ADB2C integration for user management",
+      "Designed and implemented Clean Architecture principles",
+      "Set up Azure DevOps CI/CD pipelines",
+      "Implemented Infrastructure as Code with Terraform",
+      "Developed high-performance cloud solution with Azure App Services",
+      "Created frontend with Angular 16 and PrimeNG",
+      "Integrated weather and AI cognitive services"
     ]
   },
   {
     role: "Software Developer",
-    company: "InnovateSoft",
-    period: "2019 - 2022",
-    location: "Austin, TX",
-    description: "Developed full-stack web applications using React, Node.js, and MongoDB. Worked in an agile environment, participating in all phases of the software development lifecycle.",
+    company: "Sparkt",
+    period: "2022 - 2023",
+    location: "Mumbai, India",
+    description: "Led the development of a comprehensive microservices platform serving various business needs including machinery monitoring, skill development, social media, ed-Tech, and e-commerce. The platform serves 30K+ active users across multiple services.",
     achievements: [
-      "Built and maintained RESTful APIs serving 10,000+ daily active users",
-      "Implemented authentication system with multi-factor security features",
-      "Developed real-time notification feature using WebSockets",
-      "Contributed to open-source projects maintained by the company"
+      "Implemented IdentityServer4 for SSO",
+      "Integrated Azure services (Service Bus, Event Bus, Functions)",
+      "Implemented gRPC and HTTP abstraction for microservices",
+      "Optimized performance with LINQ and ADO.NET",
+      "Integrated multiple third-party services",
+      "Implemented social login functionality",
+      "Integrated payment gateway systems"
     ]
   },
   {
-    role: "Junior Developer",
-    company: "WebSolutions Ltd.",
-    period: "2017 - 2019",
-    location: "Chicago, IL",
-    description: "Started as a front-end developer working with HTML, CSS, and JavaScript. Gradually took on full-stack responsibilities with React and Express.js.",
+    role: "Software Developer",
+    company: "Accenture",
+    period: "2020 - 2022",
+    location: "Mumbai, India",
+    description: "Developed a comprehensive back-office system for retail accounts to validate, process, execute and acknowledge trades created by account managers with their corresponding confirmations from brokers.",
     achievements: [
-      "Developed responsive designs for 15+ client websites",
-      "Implemented e-commerce functionality for small business clients",
-      "Created and maintained WordPress plugins for content management",
-      "Assisted in database design and optimization for web applications"
+      "Migrated from legacy system to microservices architecture",
+      "Implemented Entity Framework with Code-First approach",
+      "Integrated Okta OAuth 2.0 for authentication",
+      "Implemented Event Bus with RabbitMQ",
+      "Created SSIS packages for data migration",
+      "Integrated AWS S3 for storage",
+      "Developed automation scripts with Python"
+    ]
+  },
+  {
+    role: "Founder & CEO",
+    company: "Smart Solutions",
+    period: "2018 - 2020",
+    location: "Ahmedabad, India",
+    description: "Built a smart medicine dispenser using Raspberry Pi, Arduino, IR Sensors, QR Scanner, and Azure IoT Hub. The system includes a cloud-based dashboard for real-time inventory monitoring and integrates payment gateways with RFID authentication.",
+    achievements: [
+      "Integrated Raspberry Pi and Arduino systems",
+      "Implemented IR Sensors and QR Scanner functionality",
+      "Integrated Azure IoT Hub for device management",
+      "Developed real-time inventory monitoring system",
+      "Integrated payment gateway systems",
+      "Implemented RFID authentication system",
+      "Created cloud-based monitoring dashboard"
+    ]
+  },
+  {
+    role: "I&C Engineer",
+    company: "Freelance",
+    period: "2018 - Present",
+    location: "Remote",
+    description: "Led the architecture for Edge computing, integrating PLC (Siemens, Allen Bradley), DCS, and cloud-based analytics. Designed SCADA-integrated industrial automation system for machine status tracking and predictive maintenance.",
+    achievements: [
+      "Designed Edge computing architecture",
+      "Integrated PLC and DCS systems",
+      "Implemented SCADA system",
+      "Developed predictive maintenance system",
+      "Set up LoRaWAN wireless sensor network",
+      "Implemented real-time data logging",
+      "Created cloud-based analytics platform"
+    ]
+  },
+  {
+    role: "IoT Engineer",
+    company: "Freelance",
+    period: "2018 - Present",
+    location: "Remote",
+    description: "Developed an AI-driven temperature and humidity control system using ESP32, DHT11 sensors, and MQTT protocol. Integrated Azure Cognitive Services for anomaly detection in crop growth.",
+    achievements: [
+      "Integrated ESP32 and DHT11 sensors",
+      "Implemented MQTT protocol",
+      "Integrated Azure Cognitive Services",
+      "Developed anomaly detection system",
+      "Created automated climate control system",
+      "Implemented real-time monitoring system",
+      "Developed data analytics dashboard"
     ]
   }
 ];
 
 const educationData = [
   {
-    degree: "Master of Science in Computer Science",
-    institution: "University of Technology",
-    period: "2016 - 2018",
-    location: "Boston, MA",
-    description: "Specialized in software engineering and distributed systems. Thesis on optimizing database performance in cloud environments.",
+    degree: "Masters of Engineering in Electrical & Computer Engineering",
+    institution: "University of Windsor",
+    period: "2022 - 2023",
+    location: "Windsor, ON, India",
+    description: "Focused on electrical, and computer systems/software development.",
     courses: [
-      "Advanced Algorithms",
-      "Cloud Computing",
-      "Distributed Systems",
-      "Machine Learning Fundamentals"
+      "Software & DSA",
+      "System Design",
+      "Autonomous Vehicles",
+      "Artificial Intelligence",
+      "Machine Learning",
+      "Electrical Component Design",
+      "MATLAB"
     ]
   },
   {
-    degree: "Bachelor of Science in Computer Engineering",
-    institution: "State University",
-    period: "2012 - 2016",
-    location: "Chicago, IL",
-    description: "Focused on computer architecture, programming fundamentals, and software development methodologies.",
+    degree: "Bachelor of Engineering in Instrumentation & Control",
+    institution: "Gujarat Technological University",
+    period: "2015 - 2019",
+    location: "Gujarat, India",
+    description: "Focused on instrumentation, control, and automation systems development.",
     courses: [
-      "Data Structures and Algorithms",
-      "Object-Oriented Programming",
-      "Database Systems",
-      "Web Development"
+      "Instrumentation",
+      "Control Systems",
+      "Automation",
+      "PLC Programming",
+      "DCS",
+      "SCADA"
     ]
   }
 ];
 
 const certifications = [
+  "Docker Certified Associate (2025)",
+  "Terraform Certified Associate (2025)",
+  "Microsoft Certified: Azure Solutions Architect Expert (2024)",
   "Microsoft Certified: Azure Developer Associate (2023)",
+  "Microsoft Certified: Azure DevOps Engineer Expert (2022)",
   "AWS Certified Developer - Associate (2022)",
-  "MongoDB Certified Developer (2021)",
-  "React.js Certification - Advanced Concepts (2020)"
 ];
 
 // Contact form initial state
@@ -117,55 +171,6 @@ export default function ResumePage() {
   
   const experienceInView = useInView(experienceRef, { once: true, amount: 0.2 });
   const educationInView = useInView(educationRef, { once: true, amount: 0.2 });
-  const contactInView = useInView(contactRef, { once: true, amount: 0.2 });
-
-  // Contact form state
-  const [formData, setFormData] = useState<FormState>({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  
-  const [formStatus, setFormStatus] = useState<FormStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
-
-  // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormStatus('submitting');
-    
-    // Validate form
-    if (!formData.name || !formData.email || !formData.message) {
-      setFormStatus('error');
-      setErrorMessage('Please fill in all required fields.');
-      return;
-    }
-
-    // Simulate form submission
-    setTimeout(() => {
-      // In a real application, you would send this data to your backend
-      console.log('Form submitted:', formData);
-      setFormStatus('success');
-      
-      // Reset form after success
-      setTimeout(() => {
-        setFormData({
-          name: '',
-          email: '',
-          subject: '',
-          message: ''
-        });
-        setFormStatus('idle');
-      }, 3000);
-    }, 1500);
-  };
 
   return (
     <div className="min-h-screen pt-24 pb-20">
@@ -202,9 +207,9 @@ export default function ResumePage() {
             className="mt-8"
           >
             <Button asChild>
-              <Link href="/rushabh-gandhi-resume.pdf" target="_blank">
-                <Download className="mr-2 h-4 w-4" /> Download Resume
-              </Link>
+            <a href="/rushabh-gandhi-resume.pdf" download target="_blank" rel="noopener noreferrer">
+              <Download className="mr-2 h-4 w-4" /> Download Resume
+            </a>
             </Button>
           </motion.div>
         </div>
@@ -370,207 +375,8 @@ export default function ResumePage() {
       </section>
 
       {/* Contact Section */}
-      <section 
-        className="py-16 bg-accent/5" 
-        ref={contactRef}
-      >
-        <div className="container mx-auto px-4">
-          <motion.h2 
-            className="text-3xl font-bold mb-12 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={contactInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
-          >
-            Get In Touch
-          </motion.h2>
-          
-          <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
-              {/* Contact Info */}
-              <motion.div 
-                className="lg:col-span-2 space-y-6"
-                initial={{ opacity: 0, x: -30 }}
-                animate={contactInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="bg-card rounded-lg border border-border p-6">
-                  <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-start">
-                      <Mail className="w-5 h-5 mr-3 text-primary" />
-                      <div>
-                        <h4 className="font-medium">Email</h4>
-                        <a href="mailto:contact@rushabhgandhi.dev" className="text-muted-foreground hover:text-primary transition-colors">
-                          contact@rushabhgandhi.dev
-                        </a>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start">
-                      <Phone className="w-5 h-5 mr-3 text-primary" />
-                      <div>
-                        <h4 className="font-medium">Phone</h4>
-                        <a href="tel:+15551234567" className="text-muted-foreground hover:text-primary transition-colors">
-                          +1 (555) 123-4567
-                        </a>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start">
-                      <MapPin className="w-5 h-5 mr-3 text-primary" />
-                      <div>
-                        <h4 className="font-medium">Location</h4>
-                        <p className="text-muted-foreground">San Francisco, California</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="bg-card rounded-lg border border-border p-6">
-                  <h3 className="text-xl font-semibold mb-6">Connect</h3>
-                  <div className="flex space-x-4">
-                    <Button variant="outline" size="icon" asChild>
-                      <Link href="https://linkedin.com/in/rushabhgandhi" target="_blank" aria-label="LinkedIn">
-                        <Linkedin className="h-5 w-5" />
-                      </Link>
-                    </Button>
-                    <Button variant="outline" size="icon" asChild>
-                      <Link href="https://github.com/rushabhgandhi" target="_blank" aria-label="GitHub">
-                        <Github className="h-5 w-5" />
-                      </Link>
-                    </Button>
-                    <Button variant="outline" size="icon" asChild>
-                      <Link href="https://twitter.com/rushabhgandhi" target="_blank" aria-label="Twitter">
-                        <Twitter className="h-5 w-5" />
-                      </Link>
-                    </Button>
-                  </div>
-                  <p className="mt-4 text-sm text-muted-foreground">
-                    Feel free to reach out on any platform. I typically respond within 24 hours.
-                  </p>
-                </div>
-              </motion.div>
-              
-              {/* Contact Form */}
-              <motion.div 
-                className="lg:col-span-3"
-                initial={{ opacity: 0, x: 30 }}
-                animate={contactInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <div className="bg-card rounded-lg border border-border p-6">
-                  <h3 className="text-xl font-semibold mb-6">Send Me a Message</h3>
-                  
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <label htmlFor="name" className="text-sm font-medium">
-                          Name <span className="text-primary">*</span>
-                        </label>
-                        <Input 
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          placeholder="Your name"
-                          disabled={formStatus === 'submitting' || formStatus === 'success'}
-                          required
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-medium">
-                          Email <span className="text-primary">*</span>
-                        </label>
-                        <Input 
-                          id="email"
-                          name="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          placeholder="Your email address"
-                          disabled={formStatus === 'submitting' || formStatus === 'success'}
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label htmlFor="subject" className="text-sm font-medium">
-                        Subject
-                      </label>
-                      <Input 
-                        id="subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleInputChange}
-                        placeholder="What is this regarding?"
-                        disabled={formStatus === 'submitting' || formStatus === 'success'}
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label htmlFor="message" className="text-sm font-medium">
-                        Message <span className="text-primary">*</span>
-                      </label>
-                      <Textarea 
-                        id="message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        placeholder="Your message"
-                        rows={6}
-                        disabled={formStatus === 'submitting' || formStatus === 'success'}
-                        required
-                      />
-                    </div>
-                    
-                    {formStatus === 'error' && (
-                      <div className="bg-destructive/10 text-destructive p-3 rounded-md flex items-start">
-                        <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
-                        <p className="text-sm">{errorMessage}</p>
-                      </div>
-                    )}
-                    
-                    {formStatus === 'success' && (
-                      <div className="bg-green-500/10 text-green-500 p-3 rounded-md flex items-start">
-                        <CheckCircle className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
-                        <p className="text-sm">Your message has been sent successfully. Ill get back to you soon!</p>
-                      </div>
-                    )}
-                    
-                    <Button 
-                      type="submit" 
-                      className="w-full"
-                      disabled={formStatus === 'submitting' || formStatus === 'success'}
-                    >
-                      {formStatus === 'submitting' ? (
-                        <>
-                          <span className="mr-2">Sending</span>
-                          <span className="animate-spin">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                            </svg>
-                          </span>
-                        </>
-                      ) : formStatus === 'success' ? (
-                        <>
-                          <CheckCircle className="mr-2 h-4 w-4" />
-                          Sent Successfully
-                        </>
-                      ) : (
-                        <>
-                          <Send className="mr-2 h-4 w-4" />
-                          Send Message
-                        </>
-                      )}
-                    </Button>
-                  </form>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
+      <section ref={contactRef}>
+        <ContactForm variant="page" />
       </section>
     </div>
   );

@@ -58,7 +58,7 @@ function generateResponse(query: string): string {
   } else if (lowerQuery.includes('about') || lowerQuery.includes('who')) {
     return AI_KNOWLEDGE.about;
   } else if (lowerQuery.includes('contact') || lowerQuery.includes('email') || lowerQuery.includes('reach')) {
-    return "You can reach Rushabh via email at contact@rushabhgandhi.dev or through LinkedIn at linkedin.com/in/rushabhgandhi.";
+    return "You can reach Rushabh via email at rkgandhi00@gmail.com or through LinkedIn at https://www.linkedin.com/in/rk1400/.";
   } else {
     return "I'm not sure about that, but I can tell you about Rushabh's skills, experience, projects, or how to contact him. What would you like to know?";
   }

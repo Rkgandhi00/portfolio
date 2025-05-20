@@ -1,7 +1,7 @@
 // app/about/page.tsx (continued)
 "use client"
 
-import {  useRef } from 'react';
+import {  useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,23 +13,25 @@ import {
   Terminal
 } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
+import { ContactModal } from '@/src/components/ui/contact-modal';
 
 // Tech skills with labels and proficiency
 const techSkills = [
-  { name: "React", category: "Frontend", icon: "/icons/react.svg", proficiency: 95 },
-  { name: "TypeScript", category: "Languages", icon: "/icons/typescript.svg", proficiency: 90 },
-  { name: "Next.js", category: "Frontend", icon: "/icons/nextjs.svg", proficiency: 85 },
-  { name: "JavaScript", category: "Languages", icon: "/icons/javascript.svg", proficiency: 95 },
-  { name: "HTML/CSS", category: "Frontend", icon: "/icons/html5.svg", proficiency: 90 },
-  { name: "Node.js", category: "Backend", icon: "/icons/nodejs.svg", proficiency: 80 },
-  { name: "ASP.NET Core", category: "Backend", icon: "/icons/dotnet.svg", proficiency: 85 },
-  { name: "C#", category: "Languages", icon: "/icons/csharp.svg", proficiency: 85 },
-  { name: "SQL", category: "Database", icon: "/icons/sql.svg", proficiency: 80 },
-  { name: "MongoDB", category: "Database", icon: "/icons/mongodb.svg", proficiency: 75 },
-  { name: "Azure", category: "DevOps", icon: "/icons/azure.svg", proficiency: 80 },
-  { name: "Git", category: "Tools", icon: "/icons/git.svg", proficiency: 90 },
-  { name: "Docker", category: "DevOps", icon: "/icons/docker.svg", proficiency: 75 },
-  { name: "GraphQL", category: "Backend", icon: "/icons/graphql.svg", proficiency: 70 },
+  { name: "C#", category: "Languages", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg", proficiency: 95 },
+  { name: ".NET", category: "Backend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg", proficiency: 95 },
+  { name: "Angular", category: "Frontend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg", proficiency: 90 },
+  { name: "React", category: "Frontend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", proficiency: 85 },
+  { name: "TypeScript", category: "Languages", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg", proficiency: 90 },
+  { name: "SQL", category: "Database", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg", proficiency: 90 },
+  { name: "Azure", category: "Cloud", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg", proficiency: 90 },
+  { name: "DevOps", category: "DevOps", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg", proficiency: 85 },
+  { name: "Docker", category: "DevOps", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg", proficiency: 85 },
+  { name: "Kubernetes", category: "DevOps", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg", proficiency: 80 },
+  { name: "IoT", category: "IoT", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/raspberrypi/raspberrypi-original.svg", proficiency: 80 },
+  { name: "Python", category: "Languages", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", proficiency: 80 },
+  { name: "Java", category: "Languages", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg", proficiency: 75 },
+  { name: "AWS", category: "Cloud", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg", proficiency: 70 },
+  { name: "Terraform", category: "DevOps", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg", proficiency: 70 },
 ];
 
 // Values data
@@ -57,6 +59,7 @@ const values = [
 ];
 
 export default function AboutPage() {
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const bioRef = useRef(null);
   const skillsRef = useRef(null);
   const valuesRef = useRef(null);
@@ -65,10 +68,9 @@ export default function AboutPage() {
   const skillsInView = useInView(skillsRef, { once: true, amount: 0.2 });
   const valuesInView = useInView(valuesRef, { once: true, amount: 0.2 });
 
-  // Using SVG placeholders until you have real icons
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const getPlaceholderIcon = (name: string) => {
-    return `/api/placeholder/40/40`;
+  // Replace the getPlaceholderIcon function with this:
+  const getSkillIcon = (icon: string) => {
+    return icon;
   };
 
   // Animation variants
@@ -135,10 +137,10 @@ export default function AboutPage() {
             <div className="absolute -inset-0.5 bg-gradient-to-tr from-primary to-accent rounded-lg opacity-20 blur-sm" />
             <div className="absolute inset-2 rounded-lg overflow-hidden bg-card">
               <Image 
-                src="/api/placeholder/600/700" 
+                src="/rushabh.jpeg" 
                 alt="Rushabh Gandhi" 
                 fill
-                style={{objectFit: "cover"}}
+                style={{objectFit: "scale-down"}}
                 className="rounded-lg"
               />
             </div>
@@ -152,19 +154,19 @@ export default function AboutPage() {
             className="space-y-6"
           >
             <h2 className="text-3xl font-bold">Rushabh Gandhi</h2>
-            <h3 className="text-xl text-primary">Senior Software Developer</h3>
+            <h3 className="text-xl text-primary">A "Follower of Patience, Passion and Perseverance"</h3>
             
             <div className="space-y-4 text-muted-foreground">
               <p>
-                With over 6 years of experience in software development, I've dedicated my career to crafting robust, user-friendly applications that solve real-world problems. My journey in tech started with a deep curiosity about how digital products shape our lives.
+                Results-driven Full-Stack Developer & IoT Engineer with 6+ years of experience in designing and developing scalable web applications, cloud-based solutions, and IoT-integrated systems. Strong expertise in .NET Core, Angular, React, Azure, and DevOps for building high-performance, secure applications.
               </p>
               
               <p>
-                I specialize in building modern web applications with React, TypeScript, and .NET technologies. My expertise spans the entire development lifecycle — from architecture and implementation to deployment and maintenance.
+                Skilled in architecting microservices, optimizing cloud infrastructures, and implementing CI/CD pipelines to enhance system reliability and efficiency. Additionally, experienced in IoT and Industry 4.0 solutions, integrating RFID, sensors, SCADA, PLCs, and Edge computing for real-time data processing and automation.
               </p>
               
               <p>
-                Beyond coding, I'm passionate about creating developer experiences that promote efficiency and joy. I believe that clean code, thoughtful architecture, and empathetic collaboration are the foundations of great software.
+                Passionate about leveraging cloud, AI, and IoT to drive innovation in industries like Capital Markets, Social Media Apps, Agriculture, Manufacturing, and Healthcare. Fluent in English, Gujarati, and Hindi with professional proficiency.
               </p>
             </div>
             
@@ -174,8 +176,8 @@ export default function AboutPage() {
                   View Resume <ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline">
-                <Link href="/contact">Contact Me</Link>
+              <Button variant="outline" onClick={() => setIsContactModalOpen(true)}>
+                Contact Me
               </Button>
             </div>
           </motion.div>
@@ -212,20 +214,27 @@ export default function AboutPage() {
               >
                 <div className="relative w-12 h-12 mb-3">
                   <Image 
-                    src={getPlaceholderIcon(skill.name)} 
+                    src={getSkillIcon(skill.icon)} 
                     alt={skill.name} 
                     width={48} 
-                    height={48} 
+                    height={48}
+                    className="object-contain"
                   />
                 </div>
-                <h4 className="font-medium text-sm">{skill.name}</h4>
-                <div className="mt-2 w-full bg-accent/30 rounded-full h-1.5">
-                  <motion.div 
-                    className="bg-primary h-1.5 rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${skill.proficiency}%` }}
-                    transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
-                  />
+                <h4 className="font-medium text-sm mb-2">{skill.name}</h4>
+                <div className="w-full space-y-1">
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Proficiency</span>
+                    <span>{skill.proficiency}%</span>
+                  </div>
+                  <div className="w-full h-2 bg-accent/30 rounded-full overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-primary rounded-full"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${skill.proficiency}%` }}
+                      transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
+                    />
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -294,24 +303,24 @@ export default function AboutPage() {
             {/* Timeline items */}
             {[
               { 
-                year: "2017", 
-                title: "Started Professional Journey", 
-                description: "Began my professional career as a Junior Developer at WebSolutions, working with basic web technologies and learning the fundamentals of software development." 
+                year: "2023 - Present", 
+                title: "Programmer Analyst at SunsetGrown", 
+                description: "Leading cloud architecture and development with Azure, implementing ADB2C, designing APIs with Clean Architecture, and developing high-performance solutions with Angular 16. Achieved 25% performance improvement and 20% cost reduction." 
               },
               { 
-                year: "2019", 
-                title: "Mid-level Developer", 
-                description: "Joined InnovateSoft as a Software Developer where I expanded my skills to include React, .NET, and cloud technologies, working on enterprise-level applications." 
+                year: "2022 - 2023", 
+                title: "Software Engineer at SPARKT", 
+                description: "Led development of Phillips X Platform ecosystem with 30K+ users, implementing microservices, IdentityServer4, and Azure services. Optimized API responses by 50% and database queries by 45%." 
               },
               { 
-                year: "2022", 
-                title: "Senior Position", 
-                description: "Promoted to Senior Software Developer at TechCorp, where I currently lead development teams, architect solutions, and mentor junior developers." 
+                year: "2020 - 2022", 
+                title: "Software Engineer at Accenture", 
+                description: "Developed TOPS back-office system for Capital Group, migrated to .NET Core 3.1, implemented OAuth 2.0, and created SSIS packages for data migration. Recognized for quality work and quick delivery." 
               },
               { 
-                year: "Present", 
-                title: "Continuous Growth", 
-                description: "Continuously expanding my expertise in modern frameworks and technologies while contributing to open-source projects and sharing knowledge through tech blogs." 
+                year: "2018 - 2020", 
+                title: "Founder & CEO at Smart Solutions", 
+                description: "Developed Smart Medicine Vending Machine, Industrial IoT Monitoring System, and Smart Greenhouse Automation, showcasing expertise in IoT, Edge computing, and industrial automation." 
               },
             ].map((item, index) => (
               <motion.div
@@ -336,6 +345,12 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Add Contact Modal */}
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={() => setIsContactModalOpen(false)} 
+      />
     </div>
   );
 }
