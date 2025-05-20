@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // app/api/placeholder/[width]/[height]/route.ts (Enhanced Version)
 import { NextRequest } from 'next/server';
 
@@ -5,51 +6,19 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { width: string; height: string } }
 ) {
-  // Ensure params are properly awaited
-  const { width: widthParam, height: heightParam } = params;
-  const width = parseInt(widthParam) || 400;
-  const height = parseInt(heightParam) || 300;
-  
-  // Get query parameters for customization
-  const url = new URL(request.url);
-  const style = url.searchParams.get('style') || 'gradient';
-  const text = url.searchParams.get('text') || `${width} × ${height}`;
-  
-  // Generate random design styles
-  const styles = {
-    gradient: generateGradientStyle(),
-    pattern: generatePatternStyle(),
-    mesh: generateMeshStyle(),
-    geometric: generateGeometricStyle(),
-  };
-  
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const selectedStyle = styles[style] || styles.gradient;
-  
-  // Generate an SVG placeholder
+  const width = parseInt(params.width);
+  const height = parseInt(params.height);
+
+  if (isNaN(width) || isNaN(height)) {
+    return new Response('Invalid dimensions', { status: 400 });
+  }
+
+  // Create a simple SVG placeholder
   const svg = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-      ${selectedStyle.background}
-      
-      <!-- Text Shadow for better visibility -->
-      <filter id="shadow">
-        <feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.3" />
-      </filter>
-      
-      <!-- Display Size Text -->
-      <text 
-        x="50%" 
-        y="50%" 
-        font-family="ui-sans-serif, system-ui, sans-serif" 
-        font-size="${Math.max(Math.min(width, height) / 10, 16)}" 
-        font-weight="bold"
-        text-anchor="middle" 
-        dominant-baseline="middle" 
-        fill="white"
-        filter="url(#shadow)"
-      >
-        ${text}
+      <rect width="100%" height="100%" fill="#f0f0f0"/>
+      <text x="50%" y="50%" font-family="Arial" font-size="24" fill="#666" text-anchor="middle" dy=".3em">
+        ${width}x${height}
       </text>
     </svg>
   `;
@@ -57,7 +26,7 @@ export async function GET(
   return new Response(svg, {
     headers: {
       'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Cache-Control': 'public, max-age=31536000',
     },
   });
 }
