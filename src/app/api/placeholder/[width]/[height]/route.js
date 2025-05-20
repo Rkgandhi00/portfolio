@@ -1,11 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// app/api/placeholder/[width]/[height]/route.ts (Enhanced Version)
-import { NextRequest } from 'next/server';
-
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { width: string; height: string } }
-) {
+// src/app/api/placeholder/[width]/[height]/route.js
+export async function GET(request, { params }) {
   const width = parseInt(params.width);
   const height = parseInt(params.height);
 
@@ -13,11 +7,23 @@ export async function GET(
     return new Response('Invalid dimensions', { status: 400 });
   }
 
-  // Create a simple SVG placeholder
+  // Randomly select a style function
+  const styleFunctions = [
+    generateSimpleStyle,
+    generateGradientStyle,
+    generatePatternStyle,
+    generateMeshStyle,
+    generateGeometricStyle
+  ];
+  
+  const randomStyleFunction = styleFunctions[Math.floor(Math.random() * styleFunctions.length)];
+  const style = randomStyleFunction();
+  
+  // Create SVG with the selected style
   const svg = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-      <rect width="100%" height="100%" fill="#f0f0f0"/>
-      <text x="50%" y="50%" font-family="Arial" font-size="24" fill="#666" text-anchor="middle" dy=".3em">
+      ${style.background}
+      <text x="50%" y="50%" font-family="Arial" font-size="24" fill="${style.textColor || '#666'}" text-anchor="middle" dy=".3em">
         ${width}x${height}
       </text>
     </svg>
@@ -29,6 +35,14 @@ export async function GET(
       'Cache-Control': 'public, max-age=31536000',
     },
   });
+}
+
+// Simple default style
+function generateSimpleStyle() {
+  return {
+    background: `<rect width="100%" height="100%" fill="#f0f0f0"/>`,
+    textColor: '#666'
+  };
 }
 
 function generateGradientStyle() {
@@ -48,7 +62,8 @@ function generateGradientStyle() {
         </linearGradient>
       </defs>
       <rect width="100%" height="100%" fill="url(#grad)" />
-    `
+    `,
+    textColor: '#fff'
   };
 }
 
@@ -66,7 +81,8 @@ function generatePatternStyle() {
       </defs>
       <rect width="100%" height="100%" fill="${bgColor}" />
       <rect width="100%" height="100%" fill="url(#pattern)" />
-    `
+    `,
+    textColor: '#fff'
   };
 }
 
@@ -97,7 +113,8 @@ function generateMeshStyle() {
       <rect width="100%" height="100%" fill="url(#grad1)" />
       <rect width="100%" height="100%" fill="url(#grad2)" />
       <rect width="100%" height="100%" fill="url(#grad3)" />
-    `
+    `,
+    textColor: '#fff'
   };
 }
 
@@ -121,6 +138,7 @@ function generateGeometricStyle() {
     background: `
       <rect width="100%" height="100%" fill="${bgColor}" />
       ${lines}
-    `
+    `,
+    textColor: '#fff'
   };
 }
