@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Input } from '@/src/components/ui/input';
 import { Button } from '@/src/components/ui/button';
+import { cn } from '@/src/lib/utils';
 
 // Project Types for TypeScript
 type ProjectTag = 'React' | 'Next.js' | 'TypeScript' | 'Node.js' | 'ASP.NET' | 'MongoDB' | 'SQL' | 'Azure' | 'AWS' | 'UI/UX' | 'Mobile' | 'GraphQL' | 'C#' | '.NET' | 'Angular' | 'DevOps' | 'Java' | 'GenAI' | 'AI/ML' | 'Data Engineering' | 'MCP' | 'Docker' | 'Kubernetes' | 'Python';
@@ -58,7 +59,7 @@ const projects: Project[] = [
       'Frontend development with Angular 16 and PrimeNG',
       'Integration with weather and AI cognitive services'
     ],
-    year: 2023
+    year: 2025
   },
   {
     id: 'phillips-platform',
@@ -130,7 +131,7 @@ const projects: Project[] = [
       'RFID authentication system',
       'Cloud-based dashboard'
     ],
-    year: 2021
+    year: 2019
   },
   {
     id: 'industrial-iot',
@@ -154,7 +155,7 @@ const projects: Project[] = [
       'Real-time data logging',
       'Cloud-based analytics'
     ],
-    year: 2021
+    year: 2020
   },
   {
     id: 'smart-greenhouse',
@@ -178,7 +179,7 @@ const projects: Project[] = [
       'Real-time monitoring system',
       'Data analytics dashboard'
     ],
-    year: 2020
+    year: 2021
   }
 ];
 
@@ -379,7 +380,7 @@ export default function ProjectsPage() {
                     <Button variant="ghost" onClick={() => openProject(project)}>
                       View Details
                     </Button>
-                    <div className="flex space-x-2">
+                    {/*<div className="flex space-x-2">
                       {project.githubUrl && (
                         <Button variant="outline" size="icon" asChild className="h-9 w-9">
                           <Link href={project.githubUrl} target="_blank" aria-label="GitHub repository">
@@ -394,7 +395,7 @@ export default function ProjectsPage() {
                           </Link>
                         </Button>
                       )}
-                    </div>
+                    </div>*/}
                   </div>
                 </div>
               </motion.div>
@@ -562,8 +563,8 @@ export default function ProjectsPage() {
                       {selectedProject.githubUrl && (
                         <Button asChild variant="outline" className="w-full">
                           <Link href={selectedProject.githubUrl} target="_blank">
-                            <Github size={16} className="mr-2" />
-                            View Source Code
+                            {/* <Github size={16} className="mr-2" />
+                            View Source Code */}
                           </Link>
                         </Button>
                       )}

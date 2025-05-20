@@ -154,7 +154,7 @@ export default function AboutPage() {
             className="space-y-6"
           >
             <h2 className="text-3xl font-bold">Rushabh Gandhi</h2>
-            <h3 className="text-xl text-primary">Full-Stack Developer & IoT Engineer</h3>
+            <h3 className="text-xl text-primary">A "Follower of Patience, Passion and Perseverance"</h3>
             
             <div className="space-y-4 text-muted-foreground">
               <p>
