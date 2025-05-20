@@ -1,55 +1,30 @@
-// app/api/placeholder/[width]/[height]/route.ts (Enhanced Version)
-import { NextRequest } from 'next/server';
+// src/app/api/placeholder/[width]/[height]/route.js
+export async function GET(request, { params }) {
+  const width = parseInt(params.width);
+  const height = parseInt(params.height);
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { width: string; height: string } }
-) {
-  // Ensure params are properly awaited
-  const { width: widthParam, height: heightParam } = params;
-  const width = parseInt(widthParam) || 400;
-  const height = parseInt(heightParam) || 300;
+  if (isNaN(width) || isNaN(height)) {
+    return new Response('Invalid dimensions', { status: 400 });
+  }
+
+  // Randomly select a style function
+  const styleFunctions = [
+    generateSimpleStyle,
+    generateGradientStyle,
+    generatePatternStyle,
+    generateMeshStyle,
+    generateGeometricStyle
+  ];
   
-  // Get query parameters for customization
-  const url = new URL(request.url);
-  const style = url.searchParams.get('style') || 'gradient';
-  const text = url.searchParams.get('text') || `${width} × ${height}`;
+  const randomStyleFunction = styleFunctions[Math.floor(Math.random() * styleFunctions.length)];
+  const style = randomStyleFunction();
   
-  // Generate random design styles
-  const styles = {
-    gradient: generateGradientStyle(),
-    pattern: generatePatternStyle(),
-    mesh: generateMeshStyle(),
-    geometric: generateGeometricStyle(),
-  };
-  
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const selectedStyle = styles[style] || styles.gradient;
-  
-  // Generate an SVG placeholder
+  // Create SVG with the selected style
   const svg = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-      ${selectedStyle.background}
-      
-      <!-- Text Shadow for better visibility -->
-      <filter id="shadow">
-        <feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.3" />
-      </filter>
-      
-      <!-- Display Size Text -->
-      <text 
-        x="50%" 
-        y="50%" 
-        font-family="ui-sans-serif, system-ui, sans-serif" 
-        font-size="${Math.max(Math.min(width, height) / 10, 16)}" 
-        font-weight="bold"
-        text-anchor="middle" 
-        dominant-baseline="middle" 
-        fill="white"
-        filter="url(#shadow)"
-      >
-        ${text}
+      ${style.background}
+      <text x="50%" y="50%" font-family="Arial" font-size="24" fill="${style.textColor || '#666'}" text-anchor="middle" dy=".3em">
+        ${width}x${height}
       </text>
     </svg>
   `;
@@ -57,9 +32,17 @@ export async function GET(
   return new Response(svg, {
     headers: {
       'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Cache-Control': 'public, max-age=31536000',
     },
   });
+}
+
+// Simple default style
+function generateSimpleStyle() {
+  return {
+    background: `<rect width="100%" height="100%" fill="#f0f0f0"/>`,
+    textColor: '#666'
+  };
 }
 
 function generateGradientStyle() {
@@ -79,7 +62,8 @@ function generateGradientStyle() {
         </linearGradient>
       </defs>
       <rect width="100%" height="100%" fill="url(#grad)" />
-    `
+    `,
+    textColor: '#fff'
   };
 }
 
@@ -97,7 +81,8 @@ function generatePatternStyle() {
       </defs>
       <rect width="100%" height="100%" fill="${bgColor}" />
       <rect width="100%" height="100%" fill="url(#pattern)" />
-    `
+    `,
+    textColor: '#fff'
   };
 }
 
@@ -128,7 +113,8 @@ function generateMeshStyle() {
       <rect width="100%" height="100%" fill="url(#grad1)" />
       <rect width="100%" height="100%" fill="url(#grad2)" />
       <rect width="100%" height="100%" fill="url(#grad3)" />
-    `
+    `,
+    textColor: '#fff'
   };
 }
 
@@ -152,6 +138,7 @@ function generateGeometricStyle() {
     background: `
       <rect width="100%" height="100%" fill="${bgColor}" />
       ${lines}
-    `
+    `,
+    textColor: '#fff'
   };
 }

@@ -1,11 +1,10 @@
 // app/blog/page.tsx
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Calendar, Clock, Tag, Search, Filter, X } from 'lucide-react';
 import { Input } from '@/src/components/ui/input';
 import { Button } from '@/src/components/ui/button';
@@ -118,8 +117,6 @@ const allCategories: BlogCategory[] = Array.from(
 ) as BlogCategory[];
 
 export default function BlogPage() {
-  const router = useRouter();
-  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<BlogCategory[]>([]);
   const [showFilters, setShowFilters] = useState(false);

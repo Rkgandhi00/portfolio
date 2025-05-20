@@ -7,7 +7,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { 
   ExternalLink, 
-  Github, 
   X, 
   ChevronRight, 
   ChevronLeft,
@@ -19,7 +18,7 @@ import { Button } from '@/src/components/ui/button';
 import { cn } from '@/src/lib/utils';
 
 // Project Types for TypeScript
-type ProjectTag = 'React' | 'Next.js' | 'TypeScript' | 'Node.js' | 'ASP.NET' | 'MongoDB' | 'SQL' | 'Azure' | 'AWS' | 'UI/UX' | 'Mobile' | 'GraphQL' | 'C#' | '.NET' | 'Angular' | 'DevOps' | 'Java' | 'GenAI' | 'AI/ML' | 'Data Engineering' | 'MCP' | 'Docker' | 'Kubernetes' | 'Python';
+type ProjectTag = 'React' | 'Next.js' | 'TypeScript' | 'Node.js' | 'ASP.NET' | 'MongoDB' | 'SQL' | 'Azure' | 'AWS' | 'UI/UX' | 'Mobile' | 'GraphQL' | 'C#' | '.NET' | 'Angular' | 'DevOps' | 'Java' | 'GenAI' | 'AI/ML' | 'Data Engineering' | 'MCP' | 'Docker' | 'Kubernetes' | 'Python' | 'Terraform' | 'gRPC' | 'RabbitMQ' | 'SSIS' | 'IoT' | 'Raspberry Pi' | 'Arduino' | 'RFID' | 'PLC' | 'SCADA' | 'Edge Computing' | 'LoRaWAN' | 'AI' | 'ESP32' | 'MQTT';
 
 interface Project {
   id: string;
@@ -270,7 +269,7 @@ export default function ProjectsPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            Explore the applications and solutions I've built
+            I&apos;m passionate about building innovative solutions that make a difference.
           </motion.p>
         </div>
       </section>

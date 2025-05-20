@@ -3,7 +3,6 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import Link from 'next/link';
 import { 
   Download
 } from 'lucide-react';
@@ -152,16 +151,6 @@ const certifications = [
   "Microsoft Certified: Azure DevOps Engineer Expert (2022)",
   "AWS Certified Developer - Associate (2022)",
 ];
-
-// Contact form initial state
-type FormState = {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-};
-
-type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 export default function ResumePage() {
   // Refs for animations

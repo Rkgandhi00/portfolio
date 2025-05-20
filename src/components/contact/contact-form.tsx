@@ -148,7 +148,7 @@ export function ContactForm({ variant = 'page', onClose }: ContactFormProps) {
                   </Button>
                 </div>
                 <p className="mt-4 text-sm text-muted-foreground">
-                  Feel free to reach out on any platform. I typically respond within 24 hours.
+                  Feel free to reach out on any platform. I&apos;ll typically respond within 24 hours.
                 </p>
               </div>
             </div>
@@ -232,7 +232,7 @@ export function ContactForm({ variant = 'page', onClose }: ContactFormProps) {
                   {formStatus === 'success' && (
                     <div className="bg-green-500/10 text-green-500 p-3 rounded-md flex items-start">
                       <CheckCircle className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
-                      <p className="text-sm">Your message has been sent successfully. I'll get back to you soon!</p>
+                      <p className="text-sm">Your message has been sent successfully. I&apos;ll get back to you soon!</p>
                     </div>
                   )}
                   
