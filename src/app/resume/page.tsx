@@ -231,7 +231,7 @@ export default function ResumePage() {
                 <div className="flex flex-col md:flex-row gap-6">
                   {/* Timeline */}
                   <div className="md:w-1/3">
-                    <div className="bg-card p-5 rounded-lg border border-border sticky top-24">
+                    <div className="bg-card p-5 rounded-lg border border-border md:sticky md:top-24">
                       <h3 className="font-bold text-xl mb-1">{job.role}</h3>
                       <h4 className="text-primary font-medium mb-2">{job.company}</h4>
                       <div className="text-sm text-muted-foreground space-y-2">
@@ -300,7 +300,7 @@ export default function ResumePage() {
                   <div className="flex flex-col md:flex-row gap-6">
                     {/* Timeline */}
                     <div className="md:w-1/3">
-                      <div className="bg-card p-5 rounded-lg border border-border sticky top-24">
+                      <div className="bg-card p-5 rounded-lg border border-border md:sticky md:top-24">
                         <h3 className="font-bold text-xl mb-1">{edu.degree}</h3>
                         <h4 className="text-primary font-medium mb-2">{edu.institution}</h4>
                         <div className="text-sm text-muted-foreground space-y-2">
