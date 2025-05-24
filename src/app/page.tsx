@@ -270,7 +270,7 @@ export default function Home() {
   }, [mounted, isDarkTheme]);
   
   // Apply theme class to the container
-  const themeClass = mounted && !isDarkTheme ? 'light-theme' : '';
+  const themeClass = 'light-theme';
   
   return (
     <div className={`relative min-h-screen w-full overflow-hidden flex flex-col items-center justify-center ${themeClass} cosmic-bg`}>
