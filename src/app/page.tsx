@@ -241,7 +241,7 @@ export default function Home() {
   }, [isDarkTheme]);
   
   return (
-    <div className={`relative min-h-screen w-full overflow-hidden flex flex-col items-center justify-center cosmic-bg ${isDarkTheme === false ? 'light-theme' : ''}`}>
+    <div className={`relative min-h-screen w-full overflow-hidden flex flex-col items-center justify-center ${isDarkTheme === false ? 'light-theme' : ''} cosmic-bg`}>
       {/* Stars background */}
       <canvas 
         ref={starsCanvasRef}
