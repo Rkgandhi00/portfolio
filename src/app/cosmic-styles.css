@@ -2,7 +2,7 @@
 /* Cosmic-themed landing page styles */
 
 /* Background gradients */
-.cosmic-bg {
+.dark-theme cosmic-bg {
   background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
   position: relative;
   overflow: hidden;
