@@ -9,7 +9,7 @@
 }
 
 .light-theme .cosmic-bg {
-  background: radial-gradient(ellipse at center, #e0f2fe 0%, #bfdbfe 50%, #93c5fd 100%);
+  background: radial-gradient(ellipse at center, #e0f2fe 0%, #bfdbfe 50%, #93c5fd 100%) !important;
 }
 
 /* Large celestial body (moon/sun) */
