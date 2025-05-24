@@ -13,7 +13,7 @@ export default function CosmicNavigation() {
   const [isVisible, setIsVisible] = useState(false);
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
-  const [isDarkTheme, setIsDarkTheme] = useState<boolean | null>(null);
+  const [isDarkTheme, setIsDarkTheme] = useState<boolean | null>(true);
   const [isClientReady, setIsClientReady] = useState(false);
   
   // Set theme state after component mounts
