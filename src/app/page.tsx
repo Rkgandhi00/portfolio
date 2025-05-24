@@ -9,14 +9,25 @@ import { useTheme } from 'next-themes';
 import './cosmic-styles.css';
 
 export default function Home() {
-  const { theme } = useTheme();
-  // Initialize with null to avoid hydration mismatch, then update after mount
-  const [isDarkTheme, setIsDarkTheme] = useState<boolean | null>(null);
+  const { theme, resolvedTheme } = useTheme();
+  
+  // Track mounting and theme state
+  const [mounted, setMounted] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(true); // Default to true to prevent flash
+  
+  // Track if component has mounted on client side
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Update theme state after component mounts on client side
   useEffect(() => {
-    setIsDarkTheme(theme === 'dark');
-  }, [theme]);
+    if (mounted) {
+      // Use resolvedTheme first, fallback to theme
+      const currentTheme = resolvedTheme || theme;
+      setIsDarkTheme(currentTheme !== 'light');
+    }
+  }, [theme, resolvedTheme, mounted]);
 
   // State for typed text animation
   const [typedName, setTypedName] = useState("");
@@ -70,6 +81,9 @@ export default function Home() {
   
   // Stars background
   useEffect(() => {
+    // Only run after mounting to prevent SSR issues
+    if (!mounted) return;
+    
     const starsCanvas = starsCanvasRef.current;
     if (!starsCanvas) return;
     
@@ -77,8 +91,12 @@ export default function Home() {
     if (!ctx) return;
     
     // Set canvas size to match window
-    starsCanvas.width = window.innerWidth;
-    starsCanvas.height = window.innerHeight;
+    const updateCanvasSize = () => {
+      starsCanvas.width = window.innerWidth;
+      starsCanvas.height = window.innerHeight;
+    };
+    
+    updateCanvasSize();
     
     // Create stars
     const stars: { x: number; y: number; size: number; opacity: number; twinkleSpeed: number }[] = [];
@@ -98,11 +116,12 @@ export default function Home() {
     let animationFrameId: number;
     let frame = 0;
     
-    const starColor = isDarkTheme !== false ? 'rgba(255, 255, 255,' : 'rgba(0, 0, 0,';
-    
     const animate = () => {
       frame++;
       ctx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+      
+      // Determine star color based on current theme
+      const starColor = isDarkTheme ? 'rgba(255, 255, 255,' : 'rgba(0, 0, 0,';
       
       // Draw stars
       stars.forEach(star => {
@@ -123,8 +142,12 @@ export default function Home() {
     
     // Handle window resize
     const handleResize = () => {
-      starsCanvas.width = window.innerWidth;
-      starsCanvas.height = window.innerHeight;
+      updateCanvasSize();
+      // Redistribute stars on resize
+      stars.forEach(star => {
+        if (star.x > starsCanvas.width) star.x = Math.random() * starsCanvas.width;
+        if (star.y > starsCanvas.height) star.y = Math.random() * starsCanvas.height;
+      });
     };
     
     window.addEventListener('resize', handleResize);
@@ -133,10 +156,13 @@ export default function Home() {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
     };
-  }, [isDarkTheme]);
+  }, [mounted, isDarkTheme]);
   
   // Particles effect (orbiting around celestial body)
   useEffect(() => {
+    // Only run after mounting to prevent SSR issues
+    if (!mounted) return;
+    
     const particlesCanvas = particlesCanvasRef.current;
     if (!particlesCanvas) return;
     
@@ -144,12 +170,16 @@ export default function Home() {
     if (!ctx) return;
     
     // Set canvas size
-    particlesCanvas.width = window.innerWidth;
-    particlesCanvas.height = window.innerHeight;
+    const updateCanvasSize = () => {
+      particlesCanvas.width = window.innerWidth;
+      particlesCanvas.height = window.innerHeight;
+    };
     
-    // Center of the celestial body (top-right area)
-    const centerX = particlesCanvas.width * 0.8;  // 80% from left
-    const centerY = particlesCanvas.height * 0.3;  // 30% from top
+    updateCanvasSize();
+    
+    // Center of the celestial body (top-right area, matching your CSS)
+    const centerX = particlesCanvas.width * 0.85;  // Adjusted to match your CSS positioning
+    const centerY = particlesCanvas.height * 0.25;  // Adjusted to match your CSS positioning
     
     // Create particles
     const particles: { 
@@ -163,13 +193,13 @@ export default function Home() {
     }[] = [];
     
     const particleCount = 100;
-    const colors = isDarkTheme !== false ? 
+    const colors = isDarkTheme ? 
       ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#f43f5e'] : 
       ['#0ea5e9', '#22c55e', '#eab308', '#f59e0b', '#ef4444'];
     
     // Define min and max distance constants
-    const minDistance = 100; // Keep away from the center
-    const maxDistance = Math.min(particlesCanvas.width, particlesCanvas.height) * 0.6;
+    const minDistance = 120;
+    const maxDistance = Math.min(particlesCanvas.width, particlesCanvas.height) * 0.4;
     
     for (let i = 0; i < particleCount; i++) {
       // Random angle around the center
@@ -187,7 +217,7 @@ export default function Home() {
         x,
         y,
         size: 1 + Math.random() * 2,
-        speed: 0.1 + Math.random() * 0.2,
+        speed: 0.005 + Math.random() * 0.01, // Slower, more subtle movement
         angle,
         distance,
         color: colors[Math.floor(Math.random() * colors.length)]
@@ -208,12 +238,12 @@ export default function Home() {
         ctx.fill();
         
         // Update particle position (orbit around celestial body)
-        particle.angle += particle.speed * (0.01 / (particle.distance / 100));
+        particle.angle += particle.speed;
         particle.x = centerX + Math.cos(particle.angle) * particle.distance;
         particle.y = centerY + Math.sin(particle.angle) * particle.distance;
         
-        // Slowly change orbit
-        particle.distance += Math.sin(particle.angle * 2) * 0.1;
+        // Slowly vary orbit distance
+        particle.distance += Math.sin(particle.angle * 3) * 0.5;
         
         // Keep particles within bounds
         if (particle.distance < minDistance || particle.distance > maxDistance) {
@@ -228,8 +258,7 @@ export default function Home() {
     
     // Handle window resize
     const handleResize = () => {
-      particlesCanvas.width = window.innerWidth;
-      particlesCanvas.height = window.innerHeight;
+      updateCanvasSize();
     };
     
     window.addEventListener('resize', handleResize);
@@ -238,10 +267,13 @@ export default function Home() {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
     };
-  }, [isDarkTheme]);
+  }, [mounted, isDarkTheme]);
+  
+  // Apply theme class to the container
+  const themeClass = mounted && !isDarkTheme ? 'light-theme' : '';
   
   return (
-    <div className={`relative min-h-screen w-full overflow-hidden flex flex-col items-center justify-center ${isDarkTheme === false ? 'light-theme' : ''} cosmic-bg`}>
+    <div className={`relative min-h-screen w-full overflow-hidden flex flex-col items-center justify-center ${themeClass} cosmic-bg`}>
       {/* Stars background */}
       <canvas 
         ref={starsCanvasRef}
@@ -251,41 +283,31 @@ export default function Home() {
       {/* Celestial body (Blue Moon in dark mode, Sun in light mode) */}
       <div className="celestial-body-container">
         <div className="celestial-body">
-          {isDarkTheme ? (
-            <>
-              {/* Moon surface texture */}
-              <div className="moon-surface"></div>
-              {/* Moon craters */}
-              <div className="moon-crater crater-1"></div>
-              <div className="moon-crater crater-2"></div>
-              <div className="moon-crater crater-3"></div>
-              <div className="moon-crater crater-4"></div>
-            </>
-          ) : (
-            <>
-              {/* Sun surface texture */}
-              <div className="sun-surface"></div>
-              {/* Sun prominences */}
-              <div className="sun-prominence prominence-1" style={{"--rotation": "20deg"} as React.CSSProperties}></div>
-              <div className="sun-prominence prominence-2" style={{"--rotation": "-30deg"} as React.CSSProperties}></div>
-              <div className="sun-prominence prominence-3" style={{"--rotation": "15deg"} as React.CSSProperties}></div>
-              {/* Sun corona */}
-              <div className="sun-corona"></div>
-              {/* Sun rays */}
-              <div className="sun-ray ray-1"></div>
-              <div className="sun-ray ray-2"></div>
-              <div className="sun-ray ray-3"></div>
-              <div className="sun-ray ray-4"></div>
-              <div className="sun-ray ray-5"></div>
-              <div className="sun-ray ray-6"></div>
-              <div className="sun-ray ray-7"></div>
-              <div className="sun-ray ray-8"></div>
-              <div className="sun-ray ray-9"></div>
-              <div className="sun-ray ray-10"></div>
-              <div className="sun-ray ray-11"></div>
-              <div className="sun-ray ray-12"></div>
-            </>
-          )}
+          {/* Moon elements - visible in dark theme */}
+          <div className="moon-surface"></div>
+          <div className="moon-crater crater-1"></div>
+          <div className="moon-crater crater-2"></div>
+          <div className="moon-crater crater-3"></div>
+          <div className="moon-crater crater-4"></div>
+          
+          {/* Sun elements - visible in light theme */}
+          <div className="sun-surface"></div>
+          <div className="sun-prominence prominence-1"></div>
+          <div className="sun-prominence prominence-2"></div>
+          <div className="sun-prominence prominence-3"></div>
+          <div className="sun-corona"></div>
+          <div className="sun-ray ray-1"></div>
+          <div className="sun-ray ray-2"></div>
+          <div className="sun-ray ray-3"></div>
+          <div className="sun-ray ray-4"></div>
+          <div className="sun-ray ray-5"></div>
+          <div className="sun-ray ray-6"></div>
+          <div className="sun-ray ray-7"></div>
+          <div className="sun-ray ray-8"></div>
+          <div className="sun-ray ray-9"></div>
+          <div className="sun-ray ray-10"></div>
+          <div className="sun-ray ray-11"></div>
+          <div className="sun-ray ray-12"></div>
         </div>
       </div>
       
