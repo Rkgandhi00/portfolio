@@ -342,7 +342,7 @@ export default function ProjectsPage() {
                 <div className="relative h-56 overflow-hidden bg-accent/10">
                   <Image
                     src={project.imageUrl}
-                    alt={project.title}
+                    alt="Coming Soon"
                     fill
                     style={{objectFit: "cover"}}
                     className="transition-transform duration-500 hover:scale-110"

@@ -55,7 +55,7 @@ export default function Home() {
     if (typedName.length < nameToType.length) {
       const timeout = setTimeout(() => {
         setTypedName(nameToType.substring(0, typedName.length + 1));
-      }, 200); // Speed of typing
+      }, 100);
       
       return () => clearTimeout(timeout);
     } else if (!isNameTyped) {
@@ -64,7 +64,7 @@ export default function Home() {
       // Start showing roles after name is typed
       setTimeout(() => {
         setShowRoles(true);
-      }, 500);
+      }, 200);
     }
   }, [typedName, isNameTyped]);
   
@@ -177,9 +177,10 @@ export default function Home() {
     
     updateCanvasSize();
     
-    // Center of the celestial body (top-right area, matching your CSS)
-    const centerX = particlesCanvas.width * 0.85;  // Adjusted to match your CSS positioning
-    const centerY = particlesCanvas.height * 0.25;  // Adjusted to match your CSS positioning
+    // Celestial body position that gently moves
+    let celestialBodyX = particlesCanvas.width * 0.85;
+    let celestialBodyY = particlesCanvas.height * 0.25;
+    let celestialBodyAngle = 0;
     
     // Create particles
     const particles: { 
@@ -209,15 +210,15 @@ export default function Home() {
       const distance = minDistance + Math.random() * (maxDistance - minDistance);
       
       // Position based on angle and distance
-      const x = centerX + Math.cos(angle) * distance;
-      const y = centerY + Math.sin(angle) * distance;
+      const x = celestialBodyX + Math.cos(angle) * distance;
+      const y = celestialBodyY + Math.sin(angle) * distance;
       
-      // Random particle properties
+      // Random particle properties - SLOWER MOVEMENT
       particles.push({
         x,
         y,
         size: 1 + Math.random() * 2,
-        speed: 0.005 + Math.random() * 0.01, // Slower, more subtle movement
+        speed: 0.0001 + Math.random() * 0.0001,
         angle,
         distance,
         color: colors[Math.floor(Math.random() * colors.length)]
@@ -230,20 +231,30 @@ export default function Home() {
     const animate = () => {
       ctx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
       
-      // Draw particles
+      // Slowly move the celestial body in a gentle orbit - IMPROVED
+      celestialBodyAngle += 0.0003; // Very slow celestial movement
+      const screenCenterX = particlesCanvas.width * 0.5;
+      const screenCenterY = particlesCanvas.height * 0.5;
+      const orbitRadius = Math.min(particlesCanvas.width, particlesCanvas.height) * 0.1; // Smaller orbit
+      
+      // Update celestial body position with gentle movement
+      celestialBodyX = screenCenterX + Math.cos(celestialBodyAngle) * orbitRadius + (particlesCanvas.width * 0.35);
+      celestialBodyY = screenCenterY + Math.sin(celestialBodyAngle * 0.7) * orbitRadius * 0.5 - (particlesCanvas.height * 0.25);
+      
+      // Draw particles - they follow the celestial body
       particles.forEach(particle => {
         ctx.fillStyle = particle.color;
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         ctx.fill();
         
-        // Update particle position (orbit around celestial body)
+        // Update particle position (orbit around moving celestial body)
         particle.angle += particle.speed;
-        particle.x = centerX + Math.cos(particle.angle) * particle.distance;
-        particle.y = centerY + Math.sin(particle.angle) * particle.distance;
+        particle.x = celestialBodyX + Math.cos(particle.angle) * particle.distance;
+        particle.y = celestialBodyY + Math.sin(particle.angle) * particle.distance;
         
-        // Slowly vary orbit distance
-        particle.distance += Math.sin(particle.angle * 3) * 0.5;
+        // Gently vary orbit distance
+        particle.distance += Math.sin(particle.angle * 2) * 0.3; // Reduced variation
         
         // Keep particles within bounds
         if (particle.distance < minDistance || particle.distance > maxDistance) {

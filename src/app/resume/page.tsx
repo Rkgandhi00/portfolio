@@ -162,12 +162,12 @@ export default function ResumePage() {
   const educationInView = useInView(educationRef, { once: true, amount: 0.2 });
 
   return (
-    <div className="min-h-screen pt-24 pb-20">
+    <div className="min-h-screen pt-16 sm:pt-20 md:pt-24 pb-20">
       {/* Hero Section */}
-      <section className="container mx-auto px-4 mb-16">
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
         <div className="text-center max-w-3xl mx-auto">
           <motion.h1 
-            className="text-4xl md:text-5xl font-bold mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -175,13 +175,13 @@ export default function ResumePage() {
             Resume & Contact
           </motion.h1>
           <motion.div 
-            className="h-1 w-20 bg-primary mx-auto mb-8"
+            className="h-1 w-16 sm:w-20 bg-primary mx-auto mb-6 sm:mb-8"
             initial={{ width: 0 }}
             animate={{ width: 80 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           />
           <motion.p 
-            className="text-lg text-muted-foreground"
+            className="text-base sm:text-lg text-muted-foreground px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
@@ -193,9 +193,9 @@ export default function ResumePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.5 }}
-            className="mt-8"
+            className="mt-6 sm:mt-8"
           >
-            <Button asChild>
+            <Button asChild className="w-full sm:w-auto">
             <a href="/rushabh-gandhi-resume.pdf" download target="_blank" rel="noopener noreferrer">
               <Download className="mr-2 h-4 w-4" /> Download Resume
             </a>
@@ -206,12 +206,12 @@ export default function ResumePage() {
 
       {/* Experience Section */}
       <section 
-        className="py-16 bg-accent/5" 
+        className="py-12 sm:py-16 bg-accent/5" 
         ref={experienceRef}
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
-            className="text-3xl font-bold mb-12 text-center"
+            className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-12 text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={experienceInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
@@ -219,46 +219,48 @@ export default function ResumePage() {
             Professional Experience
           </motion.h2>
 
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             {experienceData.map((job, index) => (
               <motion.div
                 key={index}
-                className="mb-12 last:mb-0"
+                className="mb-8 sm:mb-12 last:mb-0"
                 initial={{ opacity: 0, y: 30 }}
                 animate={experienceInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                 transition={{ delay: 0.2 * index, duration: 0.5 }}
               >
-                <div className="flex flex-col md:flex-row gap-6">
-                  {/* Timeline */}
-                  <div className="md:w-1/3">
-                    <div className="bg-card p-5 rounded-lg border border-border md:sticky md:top-24">
-                      <h3 className="font-bold text-xl mb-1">{job.role}</h3>
-                      <h4 className="text-primary font-medium mb-2">{job.company}</h4>
-                      <div className="text-sm text-muted-foreground space-y-2">
-                        <div className="flex items-center">
-                          <span className="inline-block w-5 mr-1">📅</span> {job.period}
+                <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+                  {/* Timeline - Mobile: Full width, Desktop: 1/3 */}
+                  <div className="lg:w-1/3">
+                    <div className="bg-card p-4 sm:p-5 rounded-lg border border-border lg:sticky lg:top-24">
+                      <h3 className="font-bold text-lg sm:text-xl mb-1 leading-tight">{job.role}</h3>
+                      <h4 className="text-primary font-medium mb-2 text-sm sm:text-base">{job.company}</h4>
+                      <div className="text-xs sm:text-sm text-muted-foreground space-y-1 sm:space-y-2">
+                        <div className="flex items-start sm:items-center">
+                          <span className="inline-block w-4 sm:w-5 mr-1 flex-shrink-0">📅</span> 
+                          <span className="break-words">{job.period}</span>
                         </div>
-                        <div className="flex items-center">
-                          <span className="inline-block w-5 mr-1">📍</span> {job.location}
+                        <div className="flex items-start sm:items-center">
+                          <span className="inline-block w-4 sm:w-5 mr-1 flex-shrink-0">📍</span> 
+                          <span className="break-words">{job.location}</span>
                         </div>
                       </div>
                     </div>
                   </div>
                   
-                  {/* Details */}
-                  <div className="md:w-2/3 space-y-6">
-                    <div className="bg-card p-6 rounded-lg border border-border">
-                      <h4 className="font-semibold mb-3">Overview</h4>
-                      <p className="text-muted-foreground">{job.description}</p>
+                  {/* Details - Mobile: Full width, Desktop: 2/3 */}
+                  <div className="lg:w-2/3 space-y-4 sm:space-y-6">
+                    <div className="bg-card p-4 sm:p-6 rounded-lg border border-border">
+                      <h4 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Overview</h4>
+                      <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{job.description}</p>
                     </div>
                     
-                    <div className="bg-card p-6 rounded-lg border border-border">
-                      <h4 className="font-semibold mb-3">Key Achievements</h4>
+                    <div className="bg-card p-4 sm:p-6 rounded-lg border border-border">
+                      <h4 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Key Achievements</h4>
                       <ul className="space-y-2 text-muted-foreground">
                         {job.achievements.map((achievement, idx) => (
-                          <li key={idx} className="flex items-start">
-                            <div className="text-primary mr-2">•</div>
-                            <div>{achievement}</div>
+                          <li key={idx} className="flex items-start text-sm sm:text-base">
+                            <div className="text-primary mr-2 mt-1 flex-shrink-0 text-xs sm:text-base">•</div>
+                            <div className="leading-relaxed">{achievement}</div>
                           </li>
                         ))}
                       </ul>
@@ -273,12 +275,12 @@ export default function ResumePage() {
 
       {/* Education Section */}
       <section 
-        className="py-16" 
+        className="py-12 sm:py-16" 
         ref={educationRef}
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
-            className="text-3xl font-bold mb-12 text-center"
+            className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-12 text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={educationInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
@@ -286,48 +288,50 @@ export default function ResumePage() {
             Education & Certifications
           </motion.h2>
           
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             {/* Education */}
-            <div className="mb-16">
+            <div className="mb-12 sm:mb-16">
               {educationData.map((edu, index) => (
                 <motion.div
                   key={index}
-                  className="mb-10 last:mb-0"
+                  className="mb-8 sm:mb-10 last:mb-0"
                   initial={{ opacity: 0, y: 30 }}
                   animate={educationInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                   transition={{ delay: 0.2 * index, duration: 0.5 }}
                 >
-                  <div className="flex flex-col md:flex-row gap-6">
+                  <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
                     {/* Timeline */}
-                    <div className="md:w-1/3">
-                      <div className="bg-card p-5 rounded-lg border border-border md:sticky md:top-24">
-                        <h3 className="font-bold text-xl mb-1">{edu.degree}</h3>
-                        <h4 className="text-primary font-medium mb-2">{edu.institution}</h4>
-                        <div className="text-sm text-muted-foreground space-y-2">
-                          <div className="flex items-center">
-                            <span className="inline-block w-5 mr-1">📅</span> {edu.period}
+                    <div className="lg:w-1/3">
+                      <div className="bg-card p-4 sm:p-5 rounded-lg border border-border lg:sticky lg:top-24">
+                        <h3 className="font-bold text-lg sm:text-xl mb-1 leading-tight">{edu.degree}</h3>
+                        <h4 className="text-primary font-medium mb-2 text-sm sm:text-base">{edu.institution}</h4>
+                        <div className="text-xs sm:text-sm text-muted-foreground space-y-1 sm:space-y-2">
+                          <div className="flex items-start sm:items-center">
+                            <span className="inline-block w-4 sm:w-5 mr-1 flex-shrink-0">📅</span> 
+                            <span className="break-words">{edu.period}</span>
                           </div>
-                          <div className="flex items-center">
-                            <span className="inline-block w-5 mr-1">📍</span> {edu.location}
+                          <div className="flex items-start sm:items-center">
+                            <span className="inline-block w-4 sm:w-5 mr-1 flex-shrink-0">📍</span> 
+                            <span className="break-words">{edu.location}</span>
                           </div>
                         </div>
                       </div>
                     </div>
                     
                     {/* Details */}
-                    <div className="md:w-2/3 space-y-6">
-                      <div className="bg-card p-6 rounded-lg border border-border">
-                        <h4 className="font-semibold mb-3">Overview</h4>
-                        <p className="text-muted-foreground">{edu.description}</p>
+                    <div className="lg:w-2/3 space-y-4 sm:space-y-6">
+                      <div className="bg-card p-4 sm:p-6 rounded-lg border border-border">
+                        <h4 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Overview</h4>
+                        <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{edu.description}</p>
                       </div>
                       
-                      <div className="bg-card p-6 rounded-lg border border-border">
-                        <h4 className="font-semibold mb-3">Key Courses</h4>
+                      <div className="bg-card p-4 sm:p-6 rounded-lg border border-border">
+                        <h4 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Key Courses</h4>
                         <ul className="space-y-2 text-muted-foreground">
                           {edu.courses.map((course, idx) => (
-                            <li key={idx} className="flex items-start">
-                              <div className="text-primary mr-2">•</div>
-                              <div>{course}</div>
+                            <li key={idx} className="flex items-start text-sm sm:text-base">
+                              <div className="text-primary mr-2 mt-1 flex-shrink-0 text-xs sm:text-base">•</div>
+                              <div className="leading-relaxed">{course}</div>
                             </li>
                           ))}
                         </ul>
@@ -345,15 +349,15 @@ export default function ResumePage() {
               animate={educationInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ delay: 0.5, duration: 0.5 }}
             >
-              <div className="p-6 bg-primary/5 border-b border-border">
-                <h3 className="text-xl font-bold">Professional Certifications</h3>
+              <div className="p-4 sm:p-6 bg-primary/5 border-b border-border">
+                <h3 className="text-lg sm:text-xl font-bold">Professional Certifications</h3>
               </div>
-              <div className="p-6">
-                <ul className="space-y-3">
+              <div className="p-4 sm:p-6">
+                <ul className="space-y-2 sm:space-y-3">
                   {certifications.map((cert, index) => (
-                    <li key={index} className="flex items-start">
-                      <div className="text-primary mr-2">•</div>
-                      <div>{cert}</div>
+                    <li key={index} className="flex items-start text-sm sm:text-base">
+                      <div className="text-primary mr-2 mt-1 flex-shrink-0 text-xs sm:text-base">•</div>
+                      <div className="leading-relaxed">{cert}</div>
                     </li>
                   ))}
                 </ul>
