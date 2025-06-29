@@ -32,7 +32,7 @@ export default function RefinedPortfolio() {
   const scaleRef = useRef(1.0);
   
   // Use global theme instead of local state
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
@@ -51,7 +51,8 @@ export default function RefinedPortfolio() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  const isDarkTheme = theme === 'dark';
+  // Use resolvedTheme to avoid hydration issues
+  const isDarkTheme = mounted ? (resolvedTheme === 'dark') : true; // Default to dark theme during SSR
   
   // Rushabh's data
   const name = "Rushabh";
@@ -135,14 +136,15 @@ export default function RefinedPortfolio() {
       currentPos = lorenzRK4(currentPos.x, currentPos.y, currentPos.z);
     }
     
+    let centerX = 0, centerY = 0, centerZ = 0;
     for (let i = 0; i < maxPoints; i++) {
       for (let step = 0; step < 2; step++) {
         currentPos = lorenzRK4(currentPos.x, currentPos.y, currentPos.z);
       }
       
-      positions[i * 3] = currentPos.x * lorenzParams.scale;
-      positions[i * 3 + 1] = currentPos.y * lorenzParams.scale;
-      positions[i * 3 + 2] = currentPos.z * lorenzParams.scale;
+      positions[i * 3] = (currentPos.x - centerX) * lorenzParams.scale;
+      positions[i * 3 + 1] = (currentPos.y - centerY) * lorenzParams.scale;
+      positions[i * 3 + 2] = (currentPos.z - centerZ) * lorenzParams.scale;
       
       // Refined color scheme - more subtle and sophisticated
       const t = i / maxPoints;
@@ -158,7 +160,15 @@ export default function RefinedPortfolio() {
       // More refined fade for better background balance
       alphas[i] = Math.pow(1 - t, 1.5) * 0.6; // Further reduced opacity
       sizes[i] = 2.0 * (1 - Math.pow(t, 0.4)); // Slightly smaller particles
+      
+      centerX += currentPos.x;
+      centerY += currentPos.y;
+      centerZ += currentPos.z;
     }
+    
+    centerX /= maxPoints;
+    centerY /= maxPoints;
+    centerZ /= maxPoints;
     
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -599,9 +609,9 @@ export default function RefinedPortfolio() {
           const { positions, colors } = system;
           const index = system.index % system.maxPoints;
           
-          positions[index * 3] = system.currentPos.x * scaleRef.current;
-          positions[index * 3 + 1] = system.currentPos.y * scaleRef.current;
-          positions[index * 3 + 2] = system.currentPos.z * scaleRef.current;
+          positions[index * 3] = (system.currentPos.x - centerX) * scaleRef.current;
+          positions[index * 3 + 1] = (system.currentPos.y - centerY) * scaleRef.current;
+          positions[index * 3 + 2] = (system.currentPos.z - centerZ) * scaleRef.current;
           
           const t = (timeRef.current + systemIndex) * 0.08;
           const hue = (system.baseHue + t + Math.sin(t * 1.8) * 0.08) % 1;
