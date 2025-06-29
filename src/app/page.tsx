@@ -32,7 +32,7 @@ export default function RefinedPortfolio() {
   const scaleRef = useRef(1.0);
   
   // Use global theme instead of local state
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
@@ -51,7 +51,8 @@ export default function RefinedPortfolio() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  const isDarkTheme = theme === 'dark';
+  // Use resolvedTheme to avoid hydration issues
+  const isDarkTheme = mounted ? (resolvedTheme === 'dark') : true; // Default to dark theme during SSR
   
   // Rushabh's data
   const name = "Rushabh";
