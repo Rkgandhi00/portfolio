@@ -690,20 +690,12 @@ export default function RefinedPortfolio() {
       <div ref={mountRef} className="absolute inset-0" />
 
       <div className="overlay-content">
-        <header className="header">
-          <nav className="nav-container">
-            <div className={`logo ${currentThemeConfig.textPrimary}`}>
-              <span className={currentThemeConfig.textAccent}>{name}</span>
-              <span className={currentThemeConfig.textWhite}>Portfolio</span>
-            </div>
-          </nav>
-        </header>
 
         <main className="main-content">
           <div className="content-wrapper">
             
             {/* Compact floating card design */}
-            <div className={`content-backdrop compact ${currentThemeConfig.cardBg}`}>
+            <div className={`content-backdrop compact mt-20 mb-10 ${currentThemeConfig.cardBg}`}>
               
               <div className="hero-section compact">
                 <div className="title-section">

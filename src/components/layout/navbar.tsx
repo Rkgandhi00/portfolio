@@ -80,37 +80,39 @@ export default function CosmicNavigation() {
     <>
       {/* Mobile menu button */}
       <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          className="fixed top-4 right-4 z-50 md:hidden"
-        >
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(!isOpen);
-            }}
-            className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 ${
-              isDarkTheme 
-                ? 'bg-gray-900/50 text-blue-300 border border-gray-700/50' 
-                : 'bg-white/90 text-orange-700 border border-orange-300/80 shadow-lg'
-            } backdrop-blur-md hover:scale-110 active:scale-95`}
-            aria-label="Toggle menu"
+        {!isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-12 right-6 z-50 md:hidden"
           >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={isOpen ? 'close' : 'open'}
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {isOpen ? <X size={20} /> : <Menu size={20} />}
-              </motion.div>
-            </AnimatePresence>
-          </button>
-        </motion.div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(!isOpen);
+              }}
+              className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 ${
+                isDarkTheme 
+                  ? 'bg-gray-900/50 text-blue-300 border border-gray-700/50' 
+                  : 'bg-white/90 text-orange-700 border border-orange-300/80 shadow-lg'
+              } backdrop-blur-md hover:scale-110 active:scale-95`}
+              aria-label="Toggle menu"
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={isOpen ? 'close' : 'open'}
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {isOpen ? <X size={20} /> : <Menu size={20} />}
+                </motion.div>
+              </AnimatePresence>
+            </button>
+          </motion.div>
+        )}
       </AnimatePresence>
       
       {/* Desktop navigation */}
@@ -205,7 +207,7 @@ export default function CosmicNavigation() {
                 isDarkTheme 
                   ? 'bg-gray-900/95 border-l border-gray-700/50' 
                   : 'bg-white/95 border-l border-orange-300/50'
-              } backdrop-blur-md flex flex-col`}
+              } backdrop-blur-md flex flex-col pb-28`}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
