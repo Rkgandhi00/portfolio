@@ -98,17 +98,11 @@ export default function ChatBot() {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { resolvedTheme } = useTheme();
+  const { theme } = useTheme();
 
-  // Set mounted state to avoid hydration issues
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const isDarkTheme = mounted ? (resolvedTheme === 'dark') : true; // Default to dark theme during SSR
+  const isDarkTheme = theme === 'dark';
 
   // Scroll to bottom of messages when new ones are added
   const scrollToBottom = () => {
@@ -154,201 +148,196 @@ export default function ChatBot() {
 
   return (
     <>
-      {/* Only render after mounting to avoid hydration issues */}
-      {mounted && (
-        <>
-          {/* Chat Button */}
+      {/* Chat Button */}
+      <motion.div
+        className="fixed bottom-6 right-6 z-50"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 2, type: 'spring' }}
+      >
+        <Button
+          className={cn(
+            "w-14 h-14 rounded-full shadow-lg transition-all duration-300",
+            isDarkTheme 
+              ? "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/25" 
+              : "bg-orange-600 hover:bg-orange-700 text-white shadow-orange-500/25"
+          )}
+          size="icon"
+          onClick={() => setIsOpen(true)}
+          aria-label="Open chat with Rushabh's AI assistant"
+        >
+          <MessageSquare size={24} />
+        </Button>
+      </motion.div>
+
+      {/* Chat Window */}
+      <AnimatePresence>
+        {isOpen && (
           <motion.div
-            className="fixed bottom-6 right-6 z-50"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 2, type: 'spring' }}
+            className={cn(
+              "fixed bottom-20 right-6 w-80 sm:w-96 h-[500px] z-50 rounded-xl shadow-2xl overflow-hidden flex flex-col border",
+              isDarkTheme
+                ? "bg-gray-900/95 border-gray-700/50 backdrop-blur-md"
+                : "bg-white/95 border-gray-200/50 backdrop-blur-md"
+            )}
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
           >
-            <Button
-              className={cn(
-                "w-14 h-14 rounded-full shadow-lg transition-all duration-300",
-                isDarkTheme 
-                  ? "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/25" 
-                  : "bg-orange-600 hover:bg-orange-700 text-white shadow-orange-500/25"
-              )}
-              size="icon"
-              onClick={() => setIsOpen(true)}
-              aria-label="Open chat with Rushabh's AI assistant"
-            >
-              <MessageSquare size={24} />
-            </Button>
-          </motion.div>
-
-          {/* Chat Window */}
-          <AnimatePresence>
-            {isOpen && (
-              <motion.div
-                className={cn(
-                  "fixed bottom-20 right-6 w-80 sm:w-96 h-[500px] z-50 rounded-xl shadow-2xl overflow-hidden flex flex-col border",
-                  isDarkTheme
-                    ? "bg-gray-900/95 border-gray-700/50 backdrop-blur-md"
-                    : "bg-white/95 border-gray-200/50 backdrop-blur-md"
-                )}
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 20, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-              >
-                {/* Chat Header */}
+            {/* Chat Header */}
+            <div className={cn(
+              "px-4 py-3 border-b flex justify-between items-center",
+              isDarkTheme 
+                ? "bg-blue-600/20 border-gray-700/50" 
+                : "bg-orange-600/10 border-gray-200/50"
+            )}>
+              <div className="flex items-center space-x-3">
                 <div className={cn(
-                  "px-4 py-3 border-b flex justify-between items-center",
+                  "w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm",
                   isDarkTheme 
-                    ? "bg-blue-600/20 border-gray-700/50" 
-                    : "bg-orange-600/10 border-gray-200/50"
+                    ? "bg-gradient-to-r from-blue-500 to-purple-600" 
+                    : "bg-gradient-to-r from-orange-500 to-red-600"
                 )}>
-                  <div className="flex items-center space-x-3">
-                    <div className={cn(
-                      "w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm",
-                      isDarkTheme 
-                        ? "bg-gradient-to-r from-blue-500 to-purple-600" 
-                        : "bg-gradient-to-r from-orange-500 to-red-600"
-                    )}>
-                      RG
-                    </div>
-                    <div>
-                      <h3 className={cn(
-                        "font-semibold text-sm",
-                        isDarkTheme ? "text-white" : "text-gray-900"
-                      )}>
-                        Rushabh&apos;s AI Assistant
-                      </h3>
-                      <p className={cn(
-                        "text-xs",
-                        isDarkTheme ? "text-gray-300" : "text-gray-600"
-                      )}>
-                        Online • Ask me anything!
-                      </p>
-                    </div>
-                  </div>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className={cn(
-                      "h-8 w-8 rounded-full",
-                      isDarkTheme 
-                        ? "text-gray-300 hover:text-white hover:bg-gray-800" 
-                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                    )}
-                    onClick={() => setIsOpen(false)}
-                    aria-label="Close chat"
-                  >
-                    <X size={18} />
-                  </Button>
+                  RG
                 </div>
+                <div>
+                  <h3 className={cn(
+                    "font-semibold text-sm",
+                    isDarkTheme ? "text-white" : "text-gray-900"
+                  )}>
+                    Rushabh;&apops;s AI Assistant
+                  </h3>
+                  <p className={cn(
+                    "text-xs",
+                    isDarkTheme ? "text-gray-300" : "text-gray-600"
+                  )}>
+                    Online • Ask me anything!
+                  </p>
+                </div>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className={cn(
+                  "h-8 w-8 rounded-full",
+                  isDarkTheme 
+                    ? "text-gray-300 hover:text-white hover:bg-gray-800" 
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                )}
+                onClick={() => setIsOpen(false)}
+                aria-label="Close chat"
+              >
+                <X size={18} />
+              </Button>
+            </div>
 
-                {/* Messages Container */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                  {messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={cn("flex", message.type === 'user' ? "justify-end" : "justify-start")}
-                    >
-                      <div
-                        className={cn(
-                          "max-w-[85%] rounded-2xl px-4 py-2 text-sm leading-relaxed whitespace-pre-line",
-                          message.type === 'user'
-                            ? isDarkTheme
-                              ? "bg-blue-600 text-white"
-                              : "bg-orange-600 text-white"
-                            : isDarkTheme
-                              ? "bg-gray-800 text-gray-100 border border-gray-700"
-                              : "bg-gray-100 text-gray-900 border border-gray-200"
-                        )}
-                      >
-                        {message.content}
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {/* Bot typing indicator */}
-                  {isTyping && (
-                    <div className="flex justify-start">
-                      <div className={cn(
-                        "max-w-[85%] rounded-2xl px-4 py-3 flex items-center space-x-3",
-                        isDarkTheme
+            {/* Messages Container */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={cn("flex", message.type === 'user' ? "justify-end" : "justify-start")}
+                >
+                  <div
+                    className={cn(
+                      "max-w-[85%] rounded-2xl px-4 py-2 text-sm leading-relaxed whitespace-pre-line",
+                      message.type === 'user'
+                        ? isDarkTheme
+                          ? "bg-blue-600 text-white"
+                          : "bg-orange-600 text-white"
+                        : isDarkTheme
                           ? "bg-gray-800 text-gray-100 border border-gray-700"
                           : "bg-gray-100 text-gray-900 border border-gray-200"
-                      )}>
-                        <span className="text-sm">Thinking</span>
-                        <div className="flex space-x-1">
-                          <motion.div
-                            className={cn(
-                              "w-1.5 h-1.5 rounded-full",
-                              isDarkTheme ? "bg-blue-400" : "bg-orange-500"
-                            )}
-                            animate={{ y: [0, -6, 0] }}
-                            transition={{ repeat: Infinity, duration: 1, delay: 0 }}
-                          />
-                          <motion.div
-                            className={cn(
-                              "w-1.5 h-1.5 rounded-full",
-                              isDarkTheme ? "bg-blue-400" : "bg-orange-500"
-                            )}
-                            animate={{ y: [0, -6, 0] }}
-                            transition={{ repeat: Infinity, duration: 1, delay: 0.2 }}
-                          />
-                          <motion.div
-                            className={cn(
-                              "w-1.5 h-1.5 rounded-full",
-                              isDarkTheme ? "bg-blue-400" : "bg-orange-500"
-                            )}
-                            animate={{ y: [0, -6, 0] }}
-                            transition={{ repeat: Infinity, duration: 1, delay: 0.4 }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div ref={messagesEndRef} />
-                </div>
-
-                {/* Input Form */}
-                <form onSubmit={handleSubmit} className={cn(
-                  "p-3 border-t flex space-x-2",
-                  isDarkTheme ? "border-gray-700/50" : "border-gray-200/50"
-                )}>
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="Ask about Rushabh's experience, skills, projects..."
-                    className={cn(
-                      "flex-1 px-4 py-2 rounded-xl border focus:outline-none focus:ring-2 transition-all",
-                      isDarkTheme
-                        ? "bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500"
-                        : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-orange-500 focus:border-orange-500"
-                    )}
-                    disabled={isTyping}
-                  />
-                  <Button 
-                    type="submit" 
-                    disabled={!inputValue.trim() || isTyping}
-                    className={cn(
-                      "rounded-xl px-4 transition-all",
-                      isDarkTheme
-                        ? "bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-700"
-                        : "bg-orange-600 hover:bg-orange-700 text-white disabled:bg-gray-300"
                     )}
                   >
-                    {isTyping ? (
-                      <Loader size={18} className="animate-spin" />
-                    ) : (
-                      <Send size={18} />
-                    )}
-                  </Button>
-                </form>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </>
-      )}
+                    {message.content}
+                  </div>
+                </div>
+              ))}
+              
+              {/* Bot typing indicator */}
+              {isTyping && (
+                <div className="flex justify-start">
+                  <div className={cn(
+                    "max-w-[85%] rounded-2xl px-4 py-3 flex items-center space-x-3",
+                    isDarkTheme
+                      ? "bg-gray-800 text-gray-100 border border-gray-700"
+                      : "bg-gray-100 text-gray-900 border border-gray-200"
+                  )}>
+                    <span className="text-sm">Thinking</span>
+                    <div className="flex space-x-1">
+                      <motion.div
+                        className={cn(
+                          "w-1.5 h-1.5 rounded-full",
+                          isDarkTheme ? "bg-blue-400" : "bg-orange-500"
+                        )}
+                        animate={{ y: [0, -6, 0] }}
+                        transition={{ repeat: Infinity, duration: 1, delay: 0 }}
+                      />
+                      <motion.div
+                        className={cn(
+                          "w-1.5 h-1.5 rounded-full",
+                          isDarkTheme ? "bg-blue-400" : "bg-orange-500"
+                        )}
+                        animate={{ y: [0, -6, 0] }}
+                        transition={{ repeat: Infinity, duration: 1, delay: 0.2 }}
+                      />
+                      <motion.div
+                        className={cn(
+                          "w-1.5 h-1.5 rounded-full",
+                          isDarkTheme ? "bg-blue-400" : "bg-orange-500"
+                        )}
+                        animate={{ y: [0, -6, 0] }}
+                        transition={{ repeat: Infinity, duration: 1, delay: 0.4 }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input Form */}
+            <form onSubmit={handleSubmit} className={cn(
+              "p-3 border-t flex space-x-2",
+              isDarkTheme ? "border-gray-700/50" : "border-gray-200/50"
+            )}>
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Ask about Rushabh's experience, skills, projects..."
+                className={cn(
+                  "flex-1 px-4 py-2 rounded-xl border focus:outline-none focus:ring-2 transition-all",
+                  isDarkTheme
+                    ? "bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500"
+                    : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-orange-500 focus:border-orange-500"
+                )}
+                disabled={isTyping}
+              />
+              <Button 
+                type="submit" 
+                disabled={!inputValue.trim() || isTyping}
+                className={cn(
+                  "rounded-xl px-4 transition-all",
+                  isDarkTheme
+                    ? "bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-700"
+                    : "bg-orange-600 hover:bg-orange-700 text-white disabled:bg-gray-300"
+                )}
+              >
+                {isTyping ? (
+                  <Loader size={18} className="animate-spin" />
+                ) : (
+                  <Send size={18} />
+                )}
+              </Button>
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
