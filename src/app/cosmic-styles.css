@@ -35,14 +35,14 @@
 
 /* Card Backgrounds - FIXED: Better contrast and smaller size */
 .card-bg-dark {
-  background: rgba(30, 41, 59, 0.25); /* Increased opacity for better readability */
-  backdrop-filter: blur(25px);
+  background: rgba(30, 41, 59, 0.99); /* Increased opacity from 0.25 to 0.85 for better readability */
+  backdrop-filter: blur(15px);
   border: 1px solid rgba(51, 65, 85, 0.3);
 }
 
 .card-bg-light {
-  background: rgba(255, 255, 255, 0.85); /* Much more opaque for better text readability */
-  backdrop-filter: blur(25px);
+  background: rgba(255, 255, 255, 0.99); /* Increased opacity from 0.85 to 0.95 for better text readability */
+  backdrop-filter: blur(15px);
   border: 1px solid rgba(251, 191, 36, 0.4);
 }
 
