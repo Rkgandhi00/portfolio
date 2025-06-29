@@ -1,7 +1,7 @@
 // src/components/cosmic-navigation.tsx
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,6 +12,9 @@ export default function CosmicNavigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [showNav, setShowNav] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const lastScrollY = useRef(0);
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   
@@ -25,7 +28,7 @@ export default function CosmicNavigation() {
   // Show navigation based on page and timing
   useEffect(() => {
     if (pathname === '/') {
-      // On homepage, show after 1 second (reduced from 3.5s for better UX)
+      // On homepage, show after 1 second
       const timer = setTimeout(() => {
         setIsVisible(true);
       }, 1000);
@@ -36,6 +39,40 @@ export default function CosmicNavigation() {
       setIsVisible(true);
     }
   }, [pathname]);
+  
+  // Hide nav on scroll down, show on scroll up or at top
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY <= 0) {
+        setShowNav(true);
+      } else if (currentScrollY > lastScrollY.current) {
+        setShowNav(false);
+        // Close mobile menu when scrolling down
+        setIsOpen(false);
+      } else {
+        setShowNav(true);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  // Track desktop/mobile
+  useEffect(() => {
+    const checkDesktop = () => {
+      const isDesktopView = window.innerWidth >= 768;
+      setIsDesktop(isDesktopView);
+      // Close mobile menu if switching to desktop
+      if (isDesktopView && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, [isOpen]);
   
   // Navigation links
   const navLinks = [
@@ -78,14 +115,15 @@ export default function CosmicNavigation() {
   
   return (
     <>
-      {/* Mobile menu button */}
+      {/* Mobile menu button - Only show on mobile when nav should be visible */}
       <AnimatePresence>
-        {!isOpen && (
+        {!isDesktop && showNav && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-12 right-6 z-50 md:hidden"
+            className="fixed top-12 right-6 z-50"
           >
             <button
               onClick={(e) => {
@@ -115,78 +153,81 @@ export default function CosmicNavigation() {
         )}
       </AnimatePresence>
       
-      {/* Desktop navigation */}
+      {/* Desktop navigation - Only show on desktop when nav should be visible */}
       <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="fixed top-6 right-6 z-50 hidden md:flex items-center"
-        >
-          <div className={`flex items-center space-x-1 px-6 py-3 rounded-full transition-all duration-300 ${
-            isDarkTheme 
-              ? 'bg-gray-900/20 border border-gray-700/30' 
-              : 'bg-white/90 border border-orange-300/50 shadow-lg'
-          } backdrop-blur-md hover:backdrop-blur-lg`}>
-            {navLinks.map((link, index) => (
-              <motion.div
-                key={link.href}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-              >
-                <Link
-                  href={link.href}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                    pathname === link.href 
-                      ? isDarkTheme 
-                        ? 'bg-blue-500/20 text-blue-300 shadow-lg shadow-blue-500/20' 
-                        : 'bg-orange-500/20 text-orange-800 shadow-lg shadow-orange-500/20'
-                      : isDarkTheme
-                        ? 'text-gray-300 hover:text-blue-300 hover:bg-gray-800/30'
-                        : 'text-gray-800 hover:text-orange-700 hover:bg-orange-100/50'
-                  }`}
+        {isDesktop && showNav && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="fixed top-6 right-6 z-50 flex items-center"
+          >
+            <div className={`flex items-center space-x-1 px-6 py-3 rounded-full transition-all duration-300 ${
+              isDarkTheme 
+                ? 'bg-gray-900/20 border border-gray-700/30' 
+                : 'bg-white/90 border border-orange-300/50 shadow-lg'
+            } backdrop-blur-md hover:backdrop-blur-lg`}>
+              {navLinks.map((link, index) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
                 >
-                  {link.label}
-                </Link>
-              </motion.div>
-            ))}
-            
-            {/* Theme toggle */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8 }}
-            >
-              <button
-                onClick={toggleTheme}
-                className={`ml-2 p-2 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 ${
-                  isDarkTheme 
-                    ? 'bg-gray-800/50 text-yellow-400 hover:bg-yellow-400/10 hover:text-yellow-300' 
-                    : 'bg-orange-200/80 text-slate-800 hover:bg-orange-300/80 hover:text-slate-900'
-                }`}
-                aria-label={`Switch to ${isDarkTheme ? 'light' : 'dark'} theme`}
-              >
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={isDarkTheme ? 'sun' : 'moon'}
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                  <Link
+                    href={link.href}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                      pathname === link.href 
+                        ? isDarkTheme 
+                          ? 'bg-blue-500/20 text-blue-300 shadow-lg shadow-blue-500/20' 
+                          : 'bg-orange-500/20 text-orange-800 shadow-lg shadow-orange-500/20'
+                        : isDarkTheme
+                          ? 'text-gray-300 hover:text-blue-300 hover:bg-gray-800/30'
+                          : 'text-gray-800 hover:text-orange-700 hover:bg-orange-100/50'
+                    }`}
                   >
-                    {isDarkTheme ? <Sun size={16} /> : <Moon size={16} />}
-                  </motion.div>
-                </AnimatePresence>
-              </button>
-            </motion.div>
-          </div>
-        </motion.div>
+                    {link.label}
+                  </Link>
+                </motion.div>
+              ))}
+              
+              {/* Theme toggle */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 }}
+              >
+                <button
+                  onClick={toggleTheme}
+                  className={`ml-2 p-2 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 ${
+                    isDarkTheme 
+                      ? 'bg-gray-800/50 text-yellow-400 hover:bg-yellow-400/10 hover:text-yellow-300' 
+                      : 'bg-orange-200/80 text-slate-800 hover:bg-orange-300/80 hover:text-slate-900'
+                  }`}
+                  aria-label={`Switch to ${isDarkTheme ? 'light' : 'dark'} theme`}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={isDarkTheme ? 'sun' : 'moon'}
+                      initial={{ rotate: -90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {isDarkTheme ? <Sun size={16} /> : <Moon size={16} />}
+                    </motion.div>
+                  </AnimatePresence>
+                </button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
       
-      {/* Mobile menu */}
+      {/* Mobile menu - Only show on mobile */}
       <AnimatePresence>
-        {isOpen && (
+        {isOpen && !isDesktop && (
           <>
             {/* Backdrop */}
             <motion.div

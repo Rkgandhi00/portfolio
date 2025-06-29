@@ -102,6 +102,8 @@ export default function ChatBot() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { resolvedTheme } = useTheme();
+  const [showChat, setShowChat] = useState(true);
+  const lastScrollY = useRef(0);
 
   // Set mounted state to avoid hydration issues
   useEffect(() => {
@@ -121,6 +123,23 @@ export default function ChatBot() {
       inputRef.current?.focus();
     }
   }, [messages, isOpen]);
+
+  // Hide chat on scroll down, show on scroll up or at top
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY <= 0) {
+        setShowChat(true);
+      } else if (currentScrollY > lastScrollY.current) {
+        setShowChat(false);
+      } else {
+        setShowChat(true);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -159,7 +178,7 @@ export default function ChatBot() {
         <>
           {/* Chat Button */}
           <motion.div
-            className="fixed bottom-6 right-6 z-50"
+            className={`fixed bottom-6 right-6 z-50 transition-transform duration-300 ${showChat ? 'translate-y-0' : 'translate-y-20 opacity-0 pointer-events-none'}`}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 2, type: 'spring' }}
