@@ -759,8 +759,7 @@ export default function RefinedPortfolio() {
                 
                 {/* Enhanced description */}
                 <p className={`description ${currentThemeConfig.textSecondary}`}>
-                  Passionate about creating elegant solutions at the intersection of mathematics, 
-                  technology, and innovation. Building scalable systems that solve real-world problems.
+                  Follower of <b>P</b>assion, <b>P</b>atience, and <b>P</b>erseverance. Building scalable systems that solve real-world problems.
                 </p>
                 
                 {/* Refined CTA buttons */}
