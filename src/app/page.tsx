@@ -2,7 +2,9 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as THREE from 'three';
+import { useTheme } from 'next-themes';
 import './cosmic-styles.css';
+import Link from 'next/link';
 
 // Type definitions for our particle system
 interface LorenzSystem {
@@ -29,18 +31,35 @@ export default function RefinedPortfolio() {
   const timeRef = useRef(0);
   const scaleRef = useRef(1.0);
   
-  // Theme and content state
-  const [isDarkTheme, setIsDarkTheme] = useState(true);
+  // Use global theme instead of local state
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Set mounted state to avoid hydration issues
+  useEffect(() => {
+    setMounted(true);
+    setIsMobile(window.innerWidth < 768);
+    
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  const isDarkTheme = theme === 'dark';
   
   // Rushabh's data
   const name = "Rushabh";
   const roles = [
     "Full Stack Developer",
     "Data Engineer", 
-    "AI/ML Specialist",
-    "Cloud Architect",
+    "AI/ML Enthusiast",
+    "Cloud Developer",
     "DevOps Engineer"
   ];
 
@@ -101,9 +120,9 @@ export default function RefinedPortfolio() {
     };
   }, []);
 
-  // Enhanced particle system creation with refined visual quality
+  // Enhanced particle system creation with mobile optimization
   const createEnhancedLorenzSystem = useCallback((startPos: { x: number, y: number, z: number }, baseHue: number, id: number): LorenzSystem => {
-    const maxPoints = 8000; // Slightly reduced for better performance
+    const maxPoints = isMobile ? 4000 : 8000; // Reduce particles on mobile
     const positions = new Float32Array(maxPoints * 3);
     const colors = new Float32Array(maxPoints * 3);
     const alphas = new Float32Array(maxPoints);
@@ -137,7 +156,7 @@ export default function RefinedPortfolio() {
       colors[i * 3 + 2] = color.b;
       
       // More refined fade for better background balance
-      alphas[i] = Math.pow(1 - t, 1.5) * 0.8; // Reduced overall opacity
+      alphas[i] = Math.pow(1 - t, 1.5) * 0.6; // Further reduced opacity
       sizes[i] = 2.0 * (1 - Math.pow(t, 0.4)); // Slightly smaller particles
     }
     
@@ -181,10 +200,10 @@ export default function RefinedPortfolio() {
           intensity = pow(intensity, 2.0);
           
           // Reduced glow for better content visibility
-          float glow = exp(-dist * 6.0) * 0.3;
+          float glow = exp(-dist * 6.0) * 0.2;
           intensity += glow;
           
-          gl_FragColor = vec4(vColor, vAlpha * intensity * 0.7);
+          gl_FragColor = vec4(vColor, vAlpha * intensity * 0.5);
         }
       `,
       uniforms: {
@@ -211,7 +230,7 @@ export default function RefinedPortfolio() {
       id,
       phase: Math.random() * Math.PI * 2
     };
-  }, [lorenzRK4]);
+  }, [lorenzRK4, isMobile]);
 
   // Enhanced Mandelbrot fragment shader
   const mandelbrotFragmentShader = `
@@ -227,11 +246,11 @@ export default function RefinedPortfolio() {
       
       float t = iterations / maxIter;
       
-      vec3 darkRed = vec3(0.25, 0.08, 0.03);
-      vec3 orange = vec3(0.7, 0.35, 0.08);
-      vec3 yellow = vec3(0.85, 0.65, 0.15);
-      vec3 lightYellow = vec3(0.9, 0.8, 0.5);
-      vec3 paleBlue = vec3(0.6, 0.7, 0.85);
+      vec3 darkRed = vec3(0.4, 0.12, 0.06); // FIXED: Darker base colors
+      vec3 orange = vec3(0.8, 0.4, 0.1);
+      vec3 yellow = vec3(0.9, 0.7, 0.2);
+      vec3 lightYellow = vec3(0.95, 0.85, 0.6);
+      vec3 paleBlue = vec3(0.7, 0.8, 0.9);
       
       float flare = sin(t * 6.0 + uTime * 1.2) * 0.15 + 0.85;
       
@@ -252,9 +271,9 @@ export default function RefinedPortfolio() {
       
       vec2 z = vec2(0.0);
       float iterations = 0.0;
-      float maxIterations = 100.0;
+      float maxIterations = 80.0;
       
-      for (int i = 0; i < 100; i++) {
+      for (int i = 0; i < 80; i++) {
         if (length(z) > 2.0) break;
         z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;
         iterations += 1.0;
@@ -271,7 +290,7 @@ export default function RefinedPortfolio() {
       float glow = exp(-dist * 2.5) * 0.08;
       color += vec3(0.15, 0.08, 0.03) * glow;
       
-      gl_FragColor = vec4(color * 0.9, 1.0);
+      gl_FragColor = vec4(color * 0.7, 1.0); // FIXED: Darker output for better text contrast
     }
   `;
 
@@ -282,7 +301,9 @@ export default function RefinedPortfolio() {
     const starColors: number[] = [];
     const starSizes: number[] = [];
     
-    for (let i = 0; i < 2000; i++) { // Reduced count
+    const starCount = isMobile ? 1000 : 2000; // Reduce stars on mobile
+    
+    for (let i = 0; i < starCount; i++) {
       starPositions.push(
         (Math.random() - 0.5) * 300,
         (Math.random() - 0.5) * 300,
@@ -328,7 +349,7 @@ export default function RefinedPortfolio() {
           
           float intensity = 1.0 - (dist * 2.0);
           intensity = pow(intensity, 1.8);
-          gl_FragColor = vec4(vColor, 0.6 * intensity);
+          gl_FragColor = vec4(vColor, 0.4 * intensity);
         }
       `,
       uniforms: {
@@ -339,14 +360,7 @@ export default function RefinedPortfolio() {
     });
     
     return new THREE.Points(starsGeometry, starsMaterial);
-  }, [isDarkTheme]);
-
-  // Theme toggle function
-  const toggleTheme = () => {
-    setIsDarkTheme(!isDarkTheme);
-    setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 1000);
-  };
+  }, [isDarkTheme, isMobile]);
 
   // Handle interactions
   const handleMouseMove = useCallback((event: MouseEvent) => {
@@ -378,7 +392,7 @@ export default function RefinedPortfolio() {
   }, [isDarkTheme]);
 
   useEffect(() => {
-    if (!mountRef.current) return;
+    if (!mountRef.current || !mounted) return;
 
     // Clear previous scene
     if (sceneRef.current) {
@@ -404,9 +418,9 @@ export default function RefinedPortfolio() {
 
     // Renderer setup
     const renderer = new THREE.WebGLRenderer({ 
-      antialias: true,
+      antialias: !isMobile, // Disable antialiasing on mobile for performance
       alpha: true,
-      powerPreference: "high-performance"
+      powerPreference: "low-power" // Use low-power mode on mobile
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(isDarkTheme ? 0x000510 : 0xf2e8d5, 1);
@@ -422,8 +436,12 @@ export default function RefinedPortfolio() {
       // ENHANCED DARK THEME - LORENZ ATTRACTOR
       scene.fog = new THREE.Fog(0x000010, 50, 140);
 
-      // Create Lorenz attractors with refined settings
-      const startingPositions = [
+      // Create fewer Lorenz attractors on mobile
+      const startingPositions = isMobile ? [
+        { x: 0.1, y: 0.0, z: 0.0 },
+        { x: 0.1, y: 0.1, z: 0.1 },
+        { x: -0.1, y: 0.1, z: 0.0 }
+      ] : [
         { x: 0.1, y: 0.0, z: 0.0 },
         { x: 0.1, y: 0.1, z: 0.1 },
         { x: -0.1, y: 0.1, z: 0.0 },
@@ -446,18 +464,18 @@ export default function RefinedPortfolio() {
       const gridHelper = new THREE.GridHelper(25, 50, 0x0066cc, 0x003366);
       gridHelper.position.y = -15;
       gridHelper.material.transparent = true;
-      gridHelper.material.opacity = 0.1;
+      gridHelper.material.opacity = 0.08; // Reduced opacity
       scene.add(gridHelper);
 
       // Refined lighting
-      const ambientLight = new THREE.AmbientLight(0x1a1a2e, 0.25);
+      const ambientLight = new THREE.AmbientLight(0x1a1a2e, 0.2);
       scene.add(ambientLight);
 
-      const pointLight1 = new THREE.PointLight(0x0088ff, 1.2, 70);
+      const pointLight1 = new THREE.PointLight(0x0088ff, 1.0, 70);
       pointLight1.position.set(12, 12, 12);
       scene.add(pointLight1);
 
-      const pointLight2 = new THREE.PointLight(0xff0088, 0.8, 50);
+      const pointLight2 = new THREE.PointLight(0xff0088, 0.6, 50);
       pointLight2.position.set(-12, 8, -12);
       scene.add(pointLight2);
 
@@ -484,7 +502,9 @@ export default function RefinedPortfolio() {
       const particlePositions: number[] = [];
       const particleColors: number[] = [];
       
-      for (let i = 0; i < 800; i++) { // Reduced count
+      const particleCount = isMobile ? 400 : 800; // Reduce particles on mobile
+      
+      for (let i = 0; i < particleCount; i++) {
         const radius = Math.random() * 45 + 20;
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.random() * Math.PI * 2;
@@ -506,13 +526,13 @@ export default function RefinedPortfolio() {
         size: 2.0,
         vertexColors: true,
         transparent: true,
-        opacity: 0.6
+        opacity: 0.4 // Reduced opacity
       });
       
       const particles = new THREE.Points(particleGeometry, particleMaterial);
       scene.add(particles);
 
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
       scene.add(ambientLight);
     }
 
@@ -543,7 +563,7 @@ export default function RefinedPortfolio() {
 
     // Optimized animation loop
     let lastTime = 0;
-    const targetFPS = 60;
+    const targetFPS = isMobile ? 30 : 60; // Lower FPS on mobile
     const frameTime = 1000 / targetFPS;
 
     const animate = (currentTime: number) => {
@@ -552,7 +572,7 @@ export default function RefinedPortfolio() {
       if (currentTime - lastTime < frameTime) return;
       lastTime = currentTime;
       
-      timeRef.current += 0.008;
+      timeRef.current += isMobile ? 0.004 : 0.008; // Slower animation on mobile
 
       if (isDarkTheme) {
         // ENHANCED LORENZ ANIMATIONS
@@ -566,7 +586,8 @@ export default function RefinedPortfolio() {
           const modRho = lorenzParams.rho + Math.sin(timeRef.current * 0.1 + systemIndex) * 0.4;
           const modSigma = lorenzParams.sigma + Math.cos(timeRef.current * 0.12 + systemIndex) * 0.15;
           
-          for (let steps = 0; steps < 4; steps++) {
+          const steps = isMobile ? 2 : 4; // Fewer computation steps on mobile
+          for (let i = 0; i < steps; i++) {
             system.currentPos = lorenzRK4(
               system.currentPos.x, 
               system.currentPos.y, 
@@ -589,15 +610,18 @@ export default function RefinedPortfolio() {
           colors[index * 3 + 1] = color.g;
           colors[index * 3 + 2] = color.b;
           
-          system.points.geometry.attributes.position.needsUpdate = true;
-          system.points.geometry.attributes.color.needsUpdate = true;
+          // Update less frequently on mobile
+          if (!isMobile || system.index % 2 === 0) {
+            system.points.geometry.attributes.position.needsUpdate = true;
+            system.points.geometry.attributes.color.needsUpdate = true;
+          }
           
           system.index++;
         });
 
         // Refined camera orbit
         const orbitRadius = 52;
-        const orbitSpeed = 0.04;
+        const orbitSpeed = isMobile ? 0.02 : 0.04; // Slower on mobile
         const baseHeight = 8;
         const heightVariation = 6;
         
@@ -614,8 +638,9 @@ export default function RefinedPortfolio() {
           material.uniforms.uTime.value = timeRef.current;
         }
 
-        camera.position.x = Math.sin(timeRef.current * 0.08) * 1.5;
-        camera.position.y = Math.cos(timeRef.current * 0.06) * 0.8;
+        const cameraSpeed = isMobile ? 0.04 : 0.08;
+        camera.position.x = Math.sin(timeRef.current * cameraSpeed) * 1.5;
+        camera.position.y = Math.cos(timeRef.current * cameraSpeed * 0.75) * 0.8;
         camera.lookAt(0, 0, 0);
       }
 
@@ -624,14 +649,14 @@ export default function RefinedPortfolio() {
       if (starMaterial.uniforms) {
         starMaterial.uniforms.uTime.value = timeRef.current;
       }
-      stars.rotation.y += 0.0001;
+      stars.rotation.y += isMobile ? 0.00005 : 0.0001; // Slower rotation on mobile
 
       renderer.render(scene, camera);
     };
 
     animate(0);
     
-    setTimeout(() => setIsLoading(false), 1200);
+    setTimeout(() => setIsLoading(false), 800); // Reduced loading time
 
     // Cleanup
     return () => {
@@ -642,7 +667,7 @@ export default function RefinedPortfolio() {
         cancelAnimationFrame(frameRef.current);
       }
     };
-  }, [isDarkTheme, createEnhancedLorenzSystem, createEnhancedStarField, handleMouseMove, handleZoom, lorenzRK4]);
+  }, [isDarkTheme, mounted, createEnhancedLorenzSystem, createEnhancedStarField, handleMouseMove, handleZoom, lorenzRK4, isMobile]);
 
   // Enhanced theme configuration
   const currentThemeConfig = isDarkTheme ? {
@@ -650,6 +675,7 @@ export default function RefinedPortfolio() {
     textPrimary: "text-primary-dark",
     textSecondary: "text-secondary-dark", 
     textAccent: "text-accent-dark",
+    textWhite: "text-white",
     buttonPrimary: "button-primary-dark",
     buttonSecondary: "button-secondary-dark",
     cardBg: "card-bg-dark",
@@ -660,12 +686,17 @@ export default function RefinedPortfolio() {
     textPrimary: "text-primary-light",
     textSecondary: "text-secondary-light",
     textAccent: "text-accent-light",
+    textWhite: "text-white",
     buttonPrimary: "button-primary-light",
     buttonSecondary: "button-secondary-light",
     cardBg: "card-bg-light",
     loadingText: "Computing Solar Fractals...",
     loadingSubtext: "Generating infinite mathematical beauty"
   };
+
+  if (!mounted) {
+    return null; // Prevent hydration mismatch
+  }
 
   return (
     <div className={`portfolio-container ${currentThemeConfig.bgClass}`}>
@@ -688,23 +719,16 @@ export default function RefinedPortfolio() {
       {/* 3D Canvas */}
       <div ref={mountRef} className="absolute inset-0" />
 
-      {/* Theme Toggle Button - Enhanced */}
-      <button
-        onClick={toggleTheme}
-        className={`theme-toggle ${currentThemeConfig.cardBg}`}
-      >
-        <span className="theme-icon">{isDarkTheme ? '☀️' : '🌙'}</span>
-      </button>
-
       {/* Overlay content with improved structure */}
       <div className="overlay-content">
-        {/* Header - Enhanced */}
+        {/* Header - Enhanced with fixed logo positioning */}
         <header className="header">
           <nav className="nav-container">
             <div className={`logo ${currentThemeConfig.textPrimary}`}>
               <span className={currentThemeConfig.textAccent}>{name}</span>
-              <span className="logo-suffix">Portfolio</span>
+              <span className={currentThemeConfig.textWhite}>Portfolio</span>
             </div>
+            {/* Remove the old theme toggle since navbar handles it */}
           </nav>
         </header>
 
@@ -712,14 +736,14 @@ export default function RefinedPortfolio() {
         <main className="main-content">
           <div className="content-wrapper">
             
-            {/* Enhanced backdrop with better readability */}
+            {/* Enhanced backdrop with better transparency */}
             <div className={`content-backdrop ${currentThemeConfig.cardBg}`}>
               
               {/* Hero section with refined typography */}
               <div className="hero-section">
                 <div className="title-section">
                   <h1 className={`main-title ${currentThemeConfig.textPrimary}`}>
-                    Hi, I'm{' '}
+                    Hi, I&apos;m{' '}
                     <span className={`name-gradient ${isDarkTheme ? 'name-gradient-dark' : 'name-gradient-light'}`}>
                       {name}
                     </span>
@@ -742,10 +766,10 @@ export default function RefinedPortfolio() {
                 {/* Refined CTA buttons */}
                 <div className="button-container">
                   <button className={`button-base button-primary ${currentThemeConfig.buttonPrimary}`}>
-                    About Me
+                    <Link href="/about">About Me</Link>
                   </button>
                   <button className={`button-base button-secondary ${currentThemeConfig.buttonSecondary}`}>
-                    View Projects
+                    <Link href="/projects">View Projects</Link>
                   </button>
                 </div>
                 
@@ -769,7 +793,7 @@ export default function RefinedPortfolio() {
             
             {/* Scroll indicator */}
             <div className="scroll-indicator">
-              <span className={`scroll-text ${currentThemeConfig.textSecondary}`}>Explore More</span>
+              <span className={`scroll-text ${currentThemeConfig.textWhite}`}>Explore More</span>
               <div className="scroll-line"></div>
             </div>
           </div>
