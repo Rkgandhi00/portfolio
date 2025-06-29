@@ -1,375 +1,803 @@
-// src/app/page.tsx
-"use client"
+'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import * as THREE from 'three';
 import { useTheme } from 'next-themes';
 import './cosmic-styles.css';
+import Link from 'next/link';
 
-export default function Home() {
-  const { theme, resolvedTheme } = useTheme();
+// Type definitions for our particle system
+interface LorenzSystem {
+  points: THREE.Points;
+  currentPos: { x: number; y: number; z: number };
+  positions: Float32Array;
+  colors: Float32Array;
+  alphas: Float32Array;
+  material: THREE.ShaderMaterial;
+  index: number;
+  maxPoints: number;
+  baseHue: number;
+  id: number;
+  phase: number;
+}
+
+export default function RefinedPortfolio() {
+  const mountRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const frameRef = useRef<number | null>(null);
+  const mouseRef = useRef({ x: 0, y: 0 });
+  const timeRef = useRef(0);
+  const scaleRef = useRef(1.0);
   
-  // Track mounting and theme state
+  // Use global theme instead of local state
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(true); // Default to true to prevent flash
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   
-  // Track if component has mounted on client side
+  // Set mounted state to avoid hydration issues
   useEffect(() => {
     setMounted(true);
-  }, []);
-  
-  // Update theme state after component mounts on client side
-  useEffect(() => {
-    if (mounted) {
-      // Use resolvedTheme first, fallback to theme
-      const currentTheme = resolvedTheme || theme;
-      setIsDarkTheme(currentTheme !== 'light');
-    }
-  }, [theme, resolvedTheme, mounted]);
-
-  // State for typed text animation
-  const [typedName, setTypedName] = useState("");
-  const [isNameTyped, setIsNameTyped] = useState(false);
-  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
-  const [showRoles, setShowRoles] = useState(false);
-  const nameToType = "Rushabh Gandhi";
-  
-  // Roles to display one by one
-  const roles = [
-    "Full Stack Developer",
-    "Cloud Developer",
-    "Data Engineer",
-    "DevOps Engineer",
-    "IoT Developer",
-    "AI/ML Developer"
-  ];
-  
-  // References for canvas elements
-  const starsCanvasRef = useRef<HTMLCanvasElement>(null);
-  const particlesCanvasRef = useRef<HTMLCanvasElement>(null);
-  
-  // Type name letter by letter
-  useEffect(() => {
-    if (typedName.length < nameToType.length) {
-      const timeout = setTimeout(() => {
-        setTypedName(nameToType.substring(0, typedName.length + 1));
-      }, 100);
-      
-      return () => clearTimeout(timeout);
-    } else if (!isNameTyped) {
-      setIsNameTyped(true);
-      
-      // Start showing roles after name is typed
-      setTimeout(() => {
-        setShowRoles(true);
-      }, 200);
-    }
-  }, [typedName, isNameTyped]);
-  
-  // Handle role cycling
-  useEffect(() => {
-    if (!showRoles) return;
+    setIsMobile(window.innerWidth < 768);
     
-    const interval = setInterval(() => {
-      setCurrentRoleIndex((prevIndex) => (prevIndex + 1) % roles.length);
-    }, 4000); // Change role every 4 seconds
-    
-    return () => clearInterval(interval);
-  }, [showRoles, roles.length]);
-  
-  // Stars background
-  useEffect(() => {
-    // Only run after mounting to prevent SSR issues
-    if (!mounted) return;
-    
-    const starsCanvas = starsCanvasRef.current;
-    if (!starsCanvas) return;
-    
-    const ctx = starsCanvas.getContext('2d');
-    if (!ctx) return;
-    
-    // Set canvas size to match window
-    const updateCanvasSize = () => {
-      starsCanvas.width = window.innerWidth;
-      starsCanvas.height = window.innerHeight;
-    };
-    
-    updateCanvasSize();
-    
-    // Create stars
-    const stars: { x: number; y: number; size: number; opacity: number; twinkleSpeed: number }[] = [];
-    const starCount = 300;
-    
-    for (let i = 0; i < starCount; i++) {
-      stars.push({
-        x: Math.random() * starsCanvas.width,
-        y: Math.random() * starsCanvas.height,
-        size: Math.random() * 2,
-        opacity: 0.5 + Math.random() * 0.5,
-        twinkleSpeed: 0.001 + Math.random() * 0.01
-      });
-    }
-    
-    // Animate stars
-    let animationFrameId: number;
-    let frame = 0;
-    
-    const animate = () => {
-      frame++;
-      ctx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
-      
-      // Determine star color based on current theme
-      const starColor = isDarkTheme ? 'rgba(255, 255, 255,' : 'rgba(0, 0, 0,';
-      
-      // Draw stars
-      stars.forEach(star => {
-        // Make stars twinkle by varying opacity
-        star.opacity += Math.sin(frame * star.twinkleSpeed) * 0.01;
-        star.opacity = Math.max(0.3, Math.min(1, star.opacity));
-        
-        ctx.fillStyle = `${starColor} ${star.opacity})`;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      
-      animationFrameId = requestAnimationFrame(animate);
-    };
-    
-    animate();
-    
-    // Handle window resize
     const handleResize = () => {
-      updateCanvasSize();
-      // Redistribute stars on resize
-      stars.forEach(star => {
-        if (star.x > starsCanvas.width) star.x = Math.random() * starsCanvas.width;
-        if (star.y > starsCanvas.height) star.y = Math.random() * starsCanvas.height;
-      });
+      setIsMobile(window.innerWidth < 768);
     };
     
     window.addEventListener('resize', handleResize);
-    
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [mounted, isDarkTheme]);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
-  // Particles effect (orbiting around celestial body)
+  // Use resolvedTheme to avoid hydration issues
+  const isDarkTheme = mounted ? (resolvedTheme === 'dark') : true; // Default to dark theme during SSR
+  
+  // Rushabh's data
+  const name = "Rushabh";
+  const roles = [
+    "Full Stack Developer",
+    "Data Engineer", 
+    "AI/ML Enthusiast",
+    "Cloud Developer",
+    "DevOps Engineer"
+  ];
+
+  // Enhanced Lorenz attractor objects
+  const particleSystemsRef = useRef<LorenzSystem[]>([]);
+  
+  // Mandelbrot objects (for light theme)
+  const mandelbrotPlaneRef = useRef<THREE.Mesh | null>(null);
+  const zoomRef = useRef(1);
+  const centerRef = useRef({ x: -0.5, y: 0 });
+
+  // Role cycling effect
   useEffect(() => {
-    // Only run after mounting to prevent SSR issues
-    if (!mounted) return;
+    const interval = setInterval(() => {
+      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Enhanced Lorenz attractor with Runge-Kutta 4th order integration
+  const lorenzParams = {
+    sigma: 10.0,
+    rho: 28.0,
+    beta: 8.0/3.0,
+    dt: 0.001,
+    scale: 1.0,
+    targetScale: 1.5
+  };
+
+  // Runge-Kutta 4th order integration for Lorenz system
+  const lorenzRK4 = useCallback((x: number, y: number, z: number, params = lorenzParams) => {
+    const { sigma, rho, beta, dt } = params;
     
-    const particlesCanvas = particlesCanvasRef.current;
-    if (!particlesCanvas) return;
+    const dxdt = (x: number, y: number) => sigma * (y - x);
+    const dydt = (x: number, y: number, z: number) => x * (rho - z) - y;
+    const dzdt = (x: number, y: number, z: number) => x * y - beta * z;
     
-    const ctx = particlesCanvas.getContext('2d');
-    if (!ctx) return;
+    const k1x = dt * dxdt(x, y);
+    const k1y = dt * dydt(x, y, z);
+    const k1z = dt * dzdt(x, y, z);
     
-    // Set canvas size
-    const updateCanvasSize = () => {
-      particlesCanvas.width = window.innerWidth;
-      particlesCanvas.height = window.innerHeight;
+    const k2x = dt * dxdt(x + k1x/2, y + k1y/2);
+    const k2y = dt * dydt(x + k1x/2, y + k1y/2, z + k1z/2);
+    const k2z = dt * dzdt(x + k1x/2, y + k1y/2, z + k1z/2);
+    
+    const k3x = dt * dxdt(x + k2x/2, y + k2y/2);
+    const k3y = dt * dydt(x + k2x/2, y + k2y/2, z + k2z/2);
+    const k3z = dt * dzdt(x + k2x/2, y + k2y/2, z + k2z/2);
+    
+    const k4x = dt * dxdt(x + k3x, y + k3y);
+    const k4y = dt * dydt(x + k3x, y + k3y, z + k3z);
+    const k4z = dt * dzdt(x + k3x, y + k3y, z + k3z);
+    
+    return {
+      x: x + (k1x + 2*k2x + 2*k3x + k4x) / 6,
+      y: y + (k1y + 2*k2y + 2*k3y + k4y) / 6,
+      z: z + (k1z + 2*k2z + 2*k3z + k4z) / 6
     };
+  }, []);
+
+  // Enhanced particle system creation with mobile optimization
+  const createEnhancedLorenzSystem = useCallback((startPos: { x: number, y: number, z: number }, baseHue: number, id: number): LorenzSystem => {
+    const maxPoints = isMobile ? 4000 : 8000; // Reduce particles on mobile
+    const positions = new Float32Array(maxPoints * 3);
+    const colors = new Float32Array(maxPoints * 3);
+    const alphas = new Float32Array(maxPoints);
+    const sizes = new Float32Array(maxPoints);
     
-    updateCanvasSize();
+    let currentPos = { ...startPos };
     
-    // Celestial body position that gently moves
-    let celestialBodyX = particlesCanvas.width * 0.85;
-    let celestialBodyY = particlesCanvas.height * 0.25;
-    let celestialBodyAngle = 0;
-    
-    // Create particles
-    const particles: { 
-      x: number; 
-      y: number; 
-      size: number; 
-      speed: number;
-      angle: number;
-      distance: number;
-      color: string;
-    }[] = [];
-    
-    const particleCount = 100;
-    const colors = isDarkTheme ? 
-      ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#f43f5e'] : 
-      ['#0ea5e9', '#22c55e', '#eab308', '#f59e0b', '#ef4444'];
-    
-    // Define min and max distance constants
-    const minDistance = 120;
-    const maxDistance = Math.min(particlesCanvas.width, particlesCanvas.height) * 0.4;
-    
-    for (let i = 0; i < particleCount; i++) {
-      // Random angle around the center
-      const angle = Math.random() * Math.PI * 2;
-      
-      // Random distance from center
-      const distance = minDistance + Math.random() * (maxDistance - minDistance);
-      
-      // Position based on angle and distance
-      const x = celestialBodyX + Math.cos(angle) * distance;
-      const y = celestialBodyY + Math.sin(angle) * distance;
-      
-      // Random particle properties - SLOWER MOVEMENT
-      particles.push({
-        x,
-        y,
-        size: 1 + Math.random() * 2,
-        speed: 0.0001 + Math.random() * 0.0001,
-        angle,
-        distance,
-        color: colors[Math.floor(Math.random() * colors.length)]
-      });
+    // Pre-compute the entire attractor path
+    for (let settle = 0; settle < 1000; settle++) {
+      currentPos = lorenzRK4(currentPos.x, currentPos.y, currentPos.z);
     }
     
-    // Animate particles
-    let animationFrameId: number;
+    for (let i = 0; i < maxPoints; i++) {
+      for (let step = 0; step < 2; step++) {
+        currentPos = lorenzRK4(currentPos.x, currentPos.y, currentPos.z);
+      }
+      
+      positions[i * 3] = currentPos.x * lorenzParams.scale;
+      positions[i * 3 + 1] = currentPos.y * lorenzParams.scale;
+      positions[i * 3 + 2] = currentPos.z * lorenzParams.scale;
+      
+      // Refined color scheme - more subtle and sophisticated
+      const t = i / maxPoints;
+      const hue = (baseHue + t * 0.15 + Math.sin(t * Math.PI * 2) * 0.03) % 1;
+      const saturation = 0.7 + Math.sin(t * Math.PI * 1.5) * 0.2;
+      const lightness = 0.4 + Math.sin(t * Math.PI * 3) * 0.15;
+      
+      const color = new THREE.Color().setHSL(hue, saturation, lightness);
+      colors[i * 3] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
+      
+      // More refined fade for better background balance
+      alphas[i] = Math.pow(1 - t, 1.5) * 0.6; // Further reduced opacity
+      sizes[i] = 2.0 * (1 - Math.pow(t, 0.4)); // Slightly smaller particles
+    }
     
-    const animate = () => {
-      ctx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
-      
-      // Slowly move the celestial body in a gentle orbit - IMPROVED
-      celestialBodyAngle += 0.0003; // Very slow celestial movement
-      const screenCenterX = particlesCanvas.width * 0.5;
-      const screenCenterY = particlesCanvas.height * 0.5;
-      const orbitRadius = Math.min(particlesCanvas.width, particlesCanvas.height) * 0.1; // Smaller orbit
-      
-      // Update celestial body position with gentle movement
-      celestialBodyX = screenCenterX + Math.cos(celestialBodyAngle) * orbitRadius + (particlesCanvas.width * 0.35);
-      celestialBodyY = screenCenterY + Math.sin(celestialBodyAngle * 0.7) * orbitRadius * 0.5 - (particlesCanvas.height * 0.25);
-      
-      // Draw particles - they follow the celestial body
-      particles.forEach(particle => {
-        ctx.fillStyle = particle.color;
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fill();
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    
+    // Refined shader material with better balance
+    const material = new THREE.ShaderMaterial({
+      vertexShader: `
+        attribute float alpha;
+        attribute float size;
+        varying vec3 vColor;
+        varying float vAlpha;
+        uniform float uTime;
         
-        // Update particle position (orbit around moving celestial body)
-        particle.angle += particle.speed;
-        particle.x = celestialBodyX + Math.cos(particle.angle) * particle.distance;
-        particle.y = celestialBodyY + Math.sin(particle.angle) * particle.distance;
+        void main() {
+          vColor = color;
+          vAlpha = alpha;
+          
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_Position = projectionMatrix * mvPosition;
+          
+          // Subtle pulsing effect
+          float pulse = 1.0 + 0.15 * sin(uTime * 1.5 + position.x * 0.05);
+          gl_PointSize = size * pulse * (180.0 / -mvPosition.z);
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vColor;
+        varying float vAlpha;
         
-        // Gently vary orbit distance
-        particle.distance += Math.sin(particle.angle * 2) * 0.3; // Reduced variation
+        void main() {
+          vec2 center = gl_PointCoord - vec2(0.5);
+          float dist = length(center);
+          
+          // Softer, more refined particles
+          float intensity = 1.0 - smoothstep(0.0, 0.5, dist);
+          intensity = pow(intensity, 2.0);
+          
+          // Reduced glow for better content visibility
+          float glow = exp(-dist * 6.0) * 0.2;
+          intensity += glow;
+          
+          gl_FragColor = vec4(vColor, vAlpha * intensity * 0.5);
+        }
+      `,
+      uniforms: {
+        uTime: { value: 0 }
+      },
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      vertexColors: true,
+      depthWrite: false
+    });
+    
+    const points = new THREE.Points(geometry, material);
+    
+    return {
+      points,
+      currentPos,
+      positions,
+      colors,
+      alphas,
+      material,
+      index: 0,
+      maxPoints,
+      baseHue,
+      id,
+      phase: Math.random() * Math.PI * 2
+    };
+  }, [lorenzRK4, isMobile]);
+
+  // Enhanced Mandelbrot fragment shader
+  const mandelbrotFragmentShader = `
+    uniform float uTime;
+    uniform float uZoom;
+    uniform vec2 uCenter;
+    uniform vec2 uResolution;
+    
+    vec3 getSolarColor(float iterations, float maxIter) {
+      if (iterations >= maxIter - 0.5) {
+        return vec3(0.08, 0.04, 0.02);
+      }
+      
+      float t = iterations / maxIter;
+      
+      vec3 darkRed = vec3(0.4, 0.12, 0.06); // FIXED: Darker base colors
+      vec3 orange = vec3(0.8, 0.4, 0.1);
+      vec3 yellow = vec3(0.9, 0.7, 0.2);
+      vec3 lightYellow = vec3(0.95, 0.85, 0.6);
+      vec3 paleBlue = vec3(0.7, 0.8, 0.9);
+      
+      float flare = sin(t * 6.0 + uTime * 1.2) * 0.15 + 0.85;
+      
+      if (t < 0.2) {
+        return mix(darkRed, orange, t * 5.0) * flare;
+      } else if (t < 0.5) {
+        return mix(orange, yellow, (t - 0.2) * 3.33) * flare;
+      } else if (t < 0.8) {
+        return mix(yellow, lightYellow, (t - 0.5) * 3.33) * flare;
+      } else {
+        return mix(lightYellow, paleBlue, (t - 0.8) * 5.0) * flare;
+      }
+    }
+    
+    void main() {
+      vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / min(uResolution.x, uResolution.y);
+      vec2 c = uv * 2.5 / uZoom + uCenter;
+      
+      vec2 z = vec2(0.0);
+      float iterations = 0.0;
+      float maxIterations = 80.0;
+      
+      for (int i = 0; i < 80; i++) {
+        if (length(z) > 2.0) break;
+        z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;
+        iterations += 1.0;
+      }
+      
+      if (iterations < maxIterations) {
+        float smoothIter = iterations + 1.0 - log2(log2(length(z)));
+        iterations = smoothIter;
+      }
+      
+      vec3 color = getSolarColor(iterations, maxIterations);
+      
+      float dist = length(uv);
+      float glow = exp(-dist * 2.5) * 0.08;
+      color += vec3(0.15, 0.08, 0.03) * glow;
+      
+      gl_FragColor = vec4(color * 0.7, 1.0); // FIXED: Darker output for better text contrast
+    }
+  `;
+
+  // Enhanced starfield with better balance
+  const createEnhancedStarField = useCallback(() => {
+    const starsGeometry = new THREE.BufferGeometry();
+    const starPositions: number[] = [];
+    const starColors: number[] = [];
+    const starSizes: number[] = [];
+    
+    const starCount = isMobile ? 1000 : 2000; // Reduce stars on mobile
+    
+    for (let i = 0; i < starCount; i++) {
+      starPositions.push(
+        (Math.random() - 0.5) * 300,
+        (Math.random() - 0.5) * 300,
+        (Math.random() - 0.5) * 300
+      );
+      
+      const color = new THREE.Color();
+      if (isDarkTheme) {
+        color.setHSL(Math.random() * 0.08 + 0.65, 0.4, Math.random() * 0.3 + 0.4);
+      } else {
+        color.setHSL(0.08 + Math.random() * 0.08, 0.6, 0.3 + Math.random() * 0.2);
+      }
+      starColors.push(color.r, color.g, color.b);
+      starSizes.push(Math.random() * 1.5 + 0.8);
+    }
+    
+    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
+    starsGeometry.setAttribute('color', new THREE.Float32BufferAttribute(starColors, 3));
+    starsGeometry.setAttribute('size', new THREE.Float32BufferAttribute(starSizes, 1));
+    
+    const starsMaterial = new THREE.ShaderMaterial({
+      vertexShader: `
+        attribute float size;
+        varying vec3 vColor;
+        uniform float uTime;
         
-        // Keep particles within bounds
-        if (particle.distance < minDistance || particle.distance > maxDistance) {
-          particle.distance = minDistance + Math.random() * (maxDistance - minDistance);
+        void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_Position = projectionMatrix * mvPosition;
+          
+          float twinkle = 1.0 + 0.3 * sin(uTime * 2.5 + position.x * 0.008);
+          gl_PointSize = size * twinkle * (120.0 / -mvPosition.z);
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vColor;
+        
+        void main() {
+          vec2 center = gl_PointCoord - vec2(0.5);
+          float dist = length(center);
+          if (dist > 0.5) discard;
+          
+          float intensity = 1.0 - (dist * 2.0);
+          intensity = pow(intensity, 1.8);
+          gl_FragColor = vec4(vColor, 0.4 * intensity);
+        }
+      `,
+      uniforms: {
+        uTime: { value: 0 }
+      },
+      transparent: true,
+      vertexColors: true
+    });
+    
+    return new THREE.Points(starsGeometry, starsMaterial);
+  }, [isDarkTheme, isMobile]);
+
+  // Handle interactions
+  const handleMouseMove = useCallback((event: MouseEvent) => {
+    mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouseRef.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    
+    if (!isDarkTheme && mandelbrotPlaneRef.current && mandelbrotPlaneRef.current.material) {
+      const panSpeed = 0.4 / zoomRef.current;
+      centerRef.current.x = -0.5 + mouseRef.current.x * panSpeed;
+      centerRef.current.y = mouseRef.current.y * panSpeed;
+      
+      const material = mandelbrotPlaneRef.current.material as THREE.ShaderMaterial;
+      material.uniforms.uCenter.value.set(
+        centerRef.current.x,
+        centerRef.current.y
+      );
+    }
+  }, [isDarkTheme]);
+
+  const handleZoom = useCallback((event: WheelEvent) => {
+    if (!isDarkTheme && mandelbrotPlaneRef.current && mandelbrotPlaneRef.current.material) {
+      event.preventDefault();
+      const zoomFactor = event.deltaY > 0 ? 0.92 : 1.08;
+      zoomRef.current *= zoomFactor;
+      
+      const material = mandelbrotPlaneRef.current.material as THREE.ShaderMaterial;
+      material.uniforms.uZoom.value = zoomRef.current;
+    }
+  }, [isDarkTheme]);
+
+  useEffect(() => {
+    if (!mountRef.current || !mounted) return;
+
+    // Clear previous scene
+    if (sceneRef.current) {
+      while (sceneRef.current.children.length > 0) {
+        sceneRef.current.remove(sceneRef.current.children[0]);
+      }
+    }
+
+    // Scene setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(isDarkTheme ? 0x000510 : 0xf2e8d5);
+    sceneRef.current = scene;
+
+    // Camera setup
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    camera.position.set(isDarkTheme ? 45 : 0, isDarkTheme ? 10 : 0, isDarkTheme ? 35 : 15);
+    cameraRef.current = camera;
+
+    // Renderer setup
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: !isMobile, // Disable antialiasing on mobile for performance
+      alpha: true,
+      powerPreference: "low-power" // Use low-power mode on mobile
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(isDarkTheme ? 0x000510 : 0xf2e8d5, 1);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    rendererRef.current = renderer;
+
+    if (mountRef.current.firstChild) {
+      mountRef.current.removeChild(mountRef.current.firstChild);
+    }
+    mountRef.current.appendChild(renderer.domElement);
+
+    if (isDarkTheme) {
+      // ENHANCED DARK THEME - LORENZ ATTRACTOR
+      scene.fog = new THREE.Fog(0x000010, 50, 140);
+
+      // Create fewer Lorenz attractors on mobile
+      const startingPositions = isMobile ? [
+        { x: 0.1, y: 0.0, z: 0.0 },
+        { x: 0.1, y: 0.1, z: 0.1 },
+        { x: -0.1, y: 0.1, z: 0.0 }
+      ] : [
+        { x: 0.1, y: 0.0, z: 0.0 },
+        { x: 0.1, y: 0.1, z: 0.1 },
+        { x: -0.1, y: 0.1, z: 0.0 },
+        { x: 0.0, y: 0.1, z: -0.1 },
+        { x: 0.05, y: -0.05, z: 0.05 }
+      ];
+      
+      const hues = [0.65, 0.15, 0.85, 0.35, 0.05];
+      const attractorSystems: LorenzSystem[] = [];
+      
+      startingPositions.forEach((pos, index) => {
+        const system = createEnhancedLorenzSystem(pos, hues[index], index);
+        attractorSystems.push(system);
+        scene.add(system.points);
+      });
+      
+      particleSystemsRef.current = attractorSystems;
+
+      // Refined grid
+      const gridHelper = new THREE.GridHelper(25, 50, 0x0066cc, 0x003366);
+      gridHelper.position.y = -15;
+      gridHelper.material.transparent = true;
+      gridHelper.material.opacity = 0.08; // Reduced opacity
+      scene.add(gridHelper);
+
+      // Refined lighting
+      const ambientLight = new THREE.AmbientLight(0x1a1a2e, 0.2);
+      scene.add(ambientLight);
+
+      const pointLight1 = new THREE.PointLight(0x0088ff, 1.0, 70);
+      pointLight1.position.set(12, 12, 12);
+      scene.add(pointLight1);
+
+      const pointLight2 = new THREE.PointLight(0xff0088, 0.6, 50);
+      pointLight2.position.set(-12, 8, -12);
+      scene.add(pointLight2);
+
+    } else {
+      // LIGHT THEME - MANDELBROT
+      const planeGeometry = new THREE.PlaneGeometry(20, 20, 1, 1);
+      const planeMaterial = new THREE.ShaderMaterial({
+        vertexShader: `void main() { gl_Position = vec4(position, 1.0); }`,
+        fragmentShader: mandelbrotFragmentShader,
+        uniforms: {
+          uTime: { value: 0 },
+          uZoom: { value: zoomRef.current },
+          uCenter: { value: new THREE.Vector2(centerRef.current.x, centerRef.current.y) },
+          uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
         }
       });
       
-      animationFrameId = requestAnimationFrame(animate);
-    };
-    
-    animate();
-    
-    // Handle window resize
+      const mandelbrotPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+      mandelbrotPlaneRef.current = mandelbrotPlane;
+      scene.add(mandelbrotPlane);
+
+      // Refined solar particles
+      const particleGeometry = new THREE.BufferGeometry();
+      const particlePositions: number[] = [];
+      const particleColors: number[] = [];
+      
+      const particleCount = isMobile ? 400 : 800; // Reduce particles on mobile
+      
+      for (let i = 0; i < particleCount; i++) {
+        const radius = Math.random() * 45 + 20;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.random() * Math.PI * 2;
+        
+        particlePositions.push(
+          Math.cos(theta) * Math.sin(phi) * radius,
+          Math.sin(theta) * Math.sin(phi) * radius,
+          Math.cos(phi) * radius
+        );
+        
+        const color = new THREE.Color().setHSL(0.08 + Math.random() * 0.08, 0.7, 0.45);
+        particleColors.push(color.r, color.g, color.b);
+      }
+      
+      particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particlePositions, 3));
+      particleGeometry.setAttribute('color', new THREE.Float32BufferAttribute(particleColors, 3));
+      
+      const particleMaterial = new THREE.PointsMaterial({
+        size: 2.0,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.4 // Reduced opacity
+      });
+      
+      const particles = new THREE.Points(particleGeometry, particleMaterial);
+      scene.add(particles);
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+      scene.add(ambientLight);
+    }
+
+    // Add refined starfield
+    const stars = createEnhancedStarField();
+    scene.add(stars);
+
+    // Event listeners
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('wheel', handleZoom);
+
+    // Resize handler
     const handleResize = () => {
-      updateCanvasSize();
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      
+      if (!isDarkTheme && mandelbrotPlaneRef.current && mandelbrotPlaneRef.current.material) {
+        const material = mandelbrotPlaneRef.current.material as THREE.ShaderMaterial;
+        material.uniforms.uResolution.value.set(
+          window.innerWidth,
+          window.innerHeight
+        );
+      }
     };
-    
+
     window.addEventListener('resize', handleResize);
-    
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [mounted, isDarkTheme]);
-  
-  // Apply theme class to the container
-  const themeClass = mounted && !isDarkTheme ? 'light-theme' : 'dark-theme';
-  
-  return (
-    <div className={`relative min-h-screen w-full overflow-hidden flex flex-col items-center justify-center ${themeClass} cosmic-bg`}>
-      {/* Stars background */}
-      <canvas 
-        ref={starsCanvasRef}
-        className="absolute inset-0 stars"
-      />
+
+    // Optimized animation loop
+    let lastTime = 0;
+    const targetFPS = isMobile ? 30 : 60; // Lower FPS on mobile
+    const frameTime = 1000 / targetFPS;
+
+    const animate = (currentTime: number) => {
+      frameRef.current = requestAnimationFrame(animate);
       
-      {/* Celestial body (Blue Moon in dark mode, Sun in light mode) */}
-      <div className="celestial-body-container">
-        <div className="celestial-body">
-          {/* Moon elements - visible in dark theme */}
-          <div className="moon-surface"></div>
-          <div className="moon-crater crater-1"></div>
-          <div className="moon-crater crater-2"></div>
-          <div className="moon-crater crater-3"></div>
-          <div className="moon-crater crater-4"></div>
+      if (currentTime - lastTime < frameTime) return;
+      lastTime = currentTime;
+      
+      timeRef.current += isMobile ? 0.004 : 0.008; // Slower animation on mobile
+
+      if (isDarkTheme) {
+        // ENHANCED LORENZ ANIMATIONS
+        const scaleProgress = Math.min(timeRef.current / 10, 1);
+        const easeOutCubic = 1 - Math.pow(1 - scaleProgress, 3);
+        scaleRef.current = lorenzParams.scale + (lorenzParams.targetScale - lorenzParams.scale) * easeOutCubic;
+        
+        particleSystemsRef.current.forEach((system, systemIndex) => {
+          system.material.uniforms.uTime.value = timeRef.current + system.phase;
           
-          {/* Sun elements - visible in light theme */}
-          <div className="sun-surface"></div>
-          <div className="sun-prominence prominence-1"></div>
-          <div className="sun-prominence prominence-2"></div>
-          <div className="sun-prominence prominence-3"></div>
-          <div className="sun-corona"></div>
-          <div className="sun-ray ray-1"></div>
-          <div className="sun-ray ray-2"></div>
-          <div className="sun-ray ray-3"></div>
-          <div className="sun-ray ray-4"></div>
-          <div className="sun-ray ray-5"></div>
-          <div className="sun-ray ray-6"></div>
-          <div className="sun-ray ray-7"></div>
-          <div className="sun-ray ray-8"></div>
-          <div className="sun-ray ray-9"></div>
-          <div className="sun-ray ray-10"></div>
-          <div className="sun-ray ray-11"></div>
-          <div className="sun-ray ray-12"></div>
-        </div>
-      </div>
-      
-      {/* Particles */}
-      <canvas 
-        ref={particlesCanvasRef}
-        className="absolute inset-0 particles-container"
-      />
-      
-      {/* Main content */}
-      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-        {/* Welcome message and Name with typing animation */}
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-8">
-          <span className="welcome-text">Hi, I am </span>{" "}
-          <span className="name-text">{typedName}</span>
-          {!isNameTyped && (
-            <span className="typing-cursor"></span>
-          )}
-        </h1>
+          const modRho = lorenzParams.rho + Math.sin(timeRef.current * 0.1 + systemIndex) * 0.4;
+          const modSigma = lorenzParams.sigma + Math.cos(timeRef.current * 0.12 + systemIndex) * 0.15;
+          
+          const steps = isMobile ? 2 : 4; // Fewer computation steps on mobile
+          for (let i = 0; i < steps; i++) {
+            system.currentPos = lorenzRK4(
+              system.currentPos.x, 
+              system.currentPos.y, 
+              system.currentPos.z,
+              { ...lorenzParams, rho: modRho, sigma: modSigma }
+            );
+          }
+          
+          const { positions, colors } = system;
+          const index = system.index % system.maxPoints;
+          
+          positions[index * 3] = system.currentPos.x * scaleRef.current;
+          positions[index * 3 + 1] = system.currentPos.y * scaleRef.current;
+          positions[index * 3 + 2] = system.currentPos.z * scaleRef.current;
+          
+          const t = (timeRef.current + systemIndex) * 0.08;
+          const hue = (system.baseHue + t + Math.sin(t * 1.8) * 0.08) % 1;
+          const color = new THREE.Color().setHSL(hue, 0.75, 0.55);
+          colors[index * 3] = color.r;
+          colors[index * 3 + 1] = color.g;
+          colors[index * 3 + 2] = color.b;
+          
+          // Update less frequently on mobile
+          if (!isMobile || system.index % 2 === 0) {
+            system.points.geometry.attributes.position.needsUpdate = true;
+            system.points.geometry.attributes.color.needsUpdate = true;
+          }
+          
+          system.index++;
+        });
+
+        // Refined camera orbit
+        const orbitRadius = 52;
+        const orbitSpeed = isMobile ? 0.02 : 0.04; // Slower on mobile
+        const baseHeight = 8;
+        const heightVariation = 6;
         
-        {/* Scrolling Roles */}
-        <div className="role-container mb-10 md:mb-16">
-          {roles.map((role, index) => (
-            <div 
-              key={role}
-              className={`role-text text-xl md:text-3xl lg:text-4xl ${currentRoleIndex === index && showRoles ? 'active' : ''}`}
-            >
-              {role}
+        camera.position.x = orbitRadius * Math.cos(timeRef.current * orbitSpeed);
+        camera.position.z = orbitRadius * Math.sin(timeRef.current * orbitSpeed);
+        camera.position.y = baseHeight + Math.sin(timeRef.current * orbitSpeed * 0.4) * heightVariation;
+        
+        camera.lookAt(0, 0, 0);
+
+      } else {
+        // MANDELBROT ANIMATIONS
+        if (mandelbrotPlaneRef.current && mandelbrotPlaneRef.current.material) {
+          const material = mandelbrotPlaneRef.current.material as THREE.ShaderMaterial;
+          material.uniforms.uTime.value = timeRef.current;
+        }
+
+        const cameraSpeed = isMobile ? 0.04 : 0.08;
+        camera.position.x = Math.sin(timeRef.current * cameraSpeed) * 1.5;
+        camera.position.y = Math.cos(timeRef.current * cameraSpeed * 0.75) * 0.8;
+        camera.lookAt(0, 0, 0);
+      }
+
+      // Update star field
+      const starMaterial = stars.material as THREE.ShaderMaterial;
+      if (starMaterial.uniforms) {
+        starMaterial.uniforms.uTime.value = timeRef.current;
+      }
+      stars.rotation.y += isMobile ? 0.00005 : 0.0001; // Slower rotation on mobile
+
+      renderer.render(scene, camera);
+    };
+
+    animate(0);
+    
+    setTimeout(() => setIsLoading(false), 800); // Reduced loading time
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('wheel', handleZoom);
+      window.removeEventListener('resize', handleResize);
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, [isDarkTheme, mounted, createEnhancedLorenzSystem, createEnhancedStarField, handleMouseMove, handleZoom, lorenzRK4, isMobile]);
+
+  // Enhanced theme configuration
+  const currentThemeConfig = isDarkTheme ? {
+    bgClass: "landing-bg-dark",
+    textPrimary: "text-primary-dark",
+    textSecondary: "text-secondary-dark", 
+    textAccent: "text-accent-dark",
+    textWhite: "text-white",
+    buttonPrimary: "button-primary-dark",
+    buttonSecondary: "button-secondary-dark",
+    cardBg: "card-bg-dark",
+    loadingText: "Computing Strange Attractor...",
+    loadingSubtext: "Solving differential equations with RK4 integration"
+  } : {
+    bgClass: "landing-bg-light", 
+    textPrimary: "text-primary-light",
+    textSecondary: "text-secondary-light",
+    textAccent: "text-accent-light",
+    textWhite: "text-white",
+    buttonPrimary: "button-primary-light",
+    buttonSecondary: "button-secondary-light",
+    cardBg: "card-bg-light",
+    loadingText: "Computing Solar Fractals...",
+    loadingSubtext: "Generating infinite mathematical beauty"
+  };
+
+  if (!mounted) {
+    return null; // Prevent hydration mismatch
+  }
+
+  return (
+    <div className={`portfolio-container ${currentThemeConfig.bgClass}`}>
+      {/* Loading screen with refined styling */}
+      {isLoading && (
+        <div className="loading-screen">
+          <div className="loading-container">
+            <div className="loading-spinner-wrapper">
+              <div className={`loading-spinner ${isDarkTheme ? 'spinner-dark' : 'spinner-light'}`}></div>
+              <div className={`loading-pulse ${isDarkTheme ? 'pulse-dark' : 'pulse-light'}`}></div>
             </div>
-          ))}
+            <div className="loading-text-container">
+              <p className={`loading-text ${currentThemeConfig.textAccent}`}>{currentThemeConfig.loadingText}</p>
+              <p className={`loading-subtext ${currentThemeConfig.textSecondary}`}>{currentThemeConfig.loadingSubtext}</p>
+            </div>
+          </div>
         </div>
-        
-        {/* CTA buttons */}
-        <AnimatePresence>
-          {isNameTyped && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="flex flex-col sm:flex-row justify-center gap-4 mt-8"
-            >
-              <Link href="/about" className="px-8 py-3 text-white rounded-md font-medium flex items-center justify-center group transition-all cta-button-primary">
-                About Me
-                <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
-              </Link>
-              <Link href="/projects" className="px-8 py-3 rounded-md font-medium transition-all cta-button-secondary">
-                View My Work
-              </Link>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      )}
+
+      {/* 3D Canvas */}
+      <div ref={mountRef} className="absolute inset-0" />
+
+      {/* Overlay content with improved structure */}
+      <div className="overlay-content">
+        {/* Header - Enhanced with fixed logo positioning */}
+        <header className="header">
+          <nav className="nav-container">
+            <div className={`logo ${currentThemeConfig.textPrimary}`}>
+              <span className={currentThemeConfig.textAccent}>{name}</span>
+              <span className={currentThemeConfig.textWhite}>Portfolio</span>
+            </div>
+            {/* Remove the old theme toggle since navbar handles it */}
+          </nav>
+        </header>
+
+        {/* Main content - Completely redesigned layout */}
+        <main className="main-content">
+          <div className="content-wrapper">
+            
+            {/* Enhanced backdrop with better transparency */}
+            <div className={`content-backdrop ${currentThemeConfig.cardBg}`}>
+              
+              {/* Hero section with refined typography */}
+              <div className="hero-section">
+                <div className="title-section">
+                  <h1 className={`main-title ${currentThemeConfig.textPrimary}`}>
+                    Hi, I&apos;m{' '}
+                    <span className={`name-gradient ${isDarkTheme ? 'name-gradient-dark' : 'name-gradient-light'}`}>
+                      {name}
+                    </span>
+                  </h1>
+                  
+                  {/* Dynamic role with smooth transitions */}
+                  <div className="role-container">
+                    <h2 className={`role-text ${currentThemeConfig.textSecondary}`}>
+                      {roles[currentRoleIndex]}
+                    </h2>
+                  </div>
+                </div>
+                
+                {/* Enhanced description */}
+                <p className={`description ${currentThemeConfig.textSecondary}`}>
+                  Follower of <b>P</b>assion, <b>P</b>atience, and <b>P</b>erseverance. Building scalable systems that solve real-world problems.
+                </p>
+                
+                {/* Refined CTA buttons */}
+                <div className="button-container">
+                  <button className={`button-base button-primary ${currentThemeConfig.buttonPrimary}`}>
+                    <Link href="/about">About Me</Link>
+                  </button>
+                  <button className={`button-base button-secondary ${currentThemeConfig.buttonSecondary}`}>
+                    <Link href="/projects">View Projects</Link>
+                  </button>
+                </div>
+                
+                {/* Subtle stats or highlights */}
+                <div className="stats-container">
+                  <div className="stat-item">
+                    <div className={`stat-number ${currentThemeConfig.textAccent}`}>6+</div>
+                    <div className={`stat-label ${currentThemeConfig.textSecondary}`}>Years Experience</div>
+                  </div>
+                  <div className="stat-item">
+                    <div className={`stat-number ${currentThemeConfig.textAccent}`}>50+</div>
+                    <div className={`stat-label ${currentThemeConfig.textSecondary}`}>Projects Completed</div>
+                  </div>
+                  <div className="stat-item">
+                    <div className={`stat-number ${currentThemeConfig.textAccent}`}>10+</div>
+                    <div className={`stat-label ${currentThemeConfig.textSecondary}`}>Technologies</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Scroll indicator */}
+            <div className="scroll-indicator">
+              <span className={`scroll-text ${currentThemeConfig.textWhite}`}>Explore More</span>
+              <div className="scroll-line"></div>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );
