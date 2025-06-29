@@ -32,7 +32,7 @@ export default function RefinedPortfolio() {
   const scaleRef = useRef(1.0);
   
   // Use global theme instead of local state
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
@@ -51,7 +51,8 @@ export default function RefinedPortfolio() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  const isDarkTheme = theme === 'dark';
+  // Use resolvedTheme to avoid hydration issues
+  const isDarkTheme = mounted ? (resolvedTheme === 'dark') : true; // Default to dark theme during SSR
   
   // Rushabh's data
   const name = "Rushabh";
@@ -130,19 +131,39 @@ export default function RefinedPortfolio() {
     
     let currentPos = { ...startPos };
     
-    // Pre-compute the entire attractor path
+    // Pre-compute the entire attractor path and find center
+    const tempPositions: { x: number, y: number, z: number }[] = [];
+    
+    // Settle the system first
     for (let settle = 0; settle < 1000; settle++) {
       currentPos = lorenzRK4(currentPos.x, currentPos.y, currentPos.z);
     }
     
+    // Collect positions to find center
     for (let i = 0; i < maxPoints; i++) {
       for (let step = 0; step < 2; step++) {
         currentPos = lorenzRK4(currentPos.x, currentPos.y, currentPos.z);
       }
-      
-      positions[i * 3] = currentPos.x * lorenzParams.scale;
-      positions[i * 3 + 1] = currentPos.y * lorenzParams.scale;
-      positions[i * 3 + 2] = currentPos.z * lorenzParams.scale;
+      tempPositions.push({ ...currentPos });
+    }
+    
+    // Calculate center of mass
+    let centerX = 0, centerY = 0, centerZ = 0;
+    for (const pos of tempPositions) {
+      centerX += pos.x;
+      centerY += pos.y;
+      centerZ += pos.z;
+    }
+    centerX /= tempPositions.length;
+    centerY /= tempPositions.length;
+    centerZ /= tempPositions.length;
+    
+    // Apply positions with centering
+    for (let i = 0; i < maxPoints; i++) {
+      const pos = tempPositions[i];
+      positions[i * 3] = (pos.x - centerX) * lorenzParams.scale;
+      positions[i * 3 + 1] = (pos.y - centerY) * lorenzParams.scale;
+      positions[i * 3 + 2] = (pos.z - centerZ) * lorenzParams.scale;
       
       // Refined color scheme - more subtle and sophisticated
       const t = i / maxPoints;
@@ -413,7 +434,7 @@ export default function RefinedPortfolio() {
       0.1,
       1000
     );
-    camera.position.set(isDarkTheme ? 45 : 0, isDarkTheme ? 10 : 0, isDarkTheme ? 35 : 15);
+    camera.position.set(isDarkTheme ? 40 : 0, isDarkTheme ? 5 : 0, isDarkTheme ? 30 : 15);
     cameraRef.current = camera;
 
     // Renderer setup
@@ -436,17 +457,17 @@ export default function RefinedPortfolio() {
       // ENHANCED DARK THEME - LORENZ ATTRACTOR
       scene.fog = new THREE.Fog(0x000010, 50, 140);
 
-      // Create fewer Lorenz attractors on mobile
+      // Create fewer Lorenz attractors on mobile with better starting positions
       const startingPositions = isMobile ? [
-        { x: 0.1, y: 0.0, z: 0.0 },
-        { x: 0.1, y: 0.1, z: 0.1 },
-        { x: -0.1, y: 0.1, z: 0.0 }
+        { x: 1.0, y: 1.0, z: 1.0 },
+        { x: -1.0, y: -1.0, z: 1.0 },
+        { x: 0.5, y: -0.5, z: 0.5 }
       ] : [
-        { x: 0.1, y: 0.0, z: 0.0 },
-        { x: 0.1, y: 0.1, z: 0.1 },
-        { x: -0.1, y: 0.1, z: 0.0 },
-        { x: 0.0, y: 0.1, z: -0.1 },
-        { x: 0.05, y: -0.05, z: 0.05 }
+        { x: 1.0, y: 1.0, z: 1.0 },
+        { x: -1.0, y: -1.0, z: 1.0 },
+        { x: 0.5, y: -0.5, z: 0.5 },
+        { x: -0.5, y: 0.5, z: -0.5 },
+        { x: 0.1, y: 0.1, z: 25.0 }
       ];
       
       const hues = [0.65, 0.15, 0.85, 0.35, 0.05];
@@ -599,9 +620,14 @@ export default function RefinedPortfolio() {
           const { positions, colors } = system;
           const index = system.index % system.maxPoints;
           
-          positions[index * 3] = system.currentPos.x * scaleRef.current;
-          positions[index * 3 + 1] = system.currentPos.y * scaleRef.current;
-          positions[index * 3 + 2] = system.currentPos.z * scaleRef.current;
+          // Apply centering offset to new points (approximate Lorenz center)
+          const lorenzCenterX = 0;
+          const lorenzCenterY = 0; 
+          const lorenzCenterZ = 25; // Lorenz attractor typically centers around z=25
+          
+          positions[index * 3] = (system.currentPos.x - lorenzCenterX) * scaleRef.current;
+          positions[index * 3 + 1] = (system.currentPos.y - lorenzCenterY) * scaleRef.current;
+          positions[index * 3 + 2] = (system.currentPos.z - lorenzCenterZ) * scaleRef.current;
           
           const t = (timeRef.current + systemIndex) * 0.08;
           const hue = (system.baseHue + t + Math.sin(t * 1.8) * 0.08) % 1;
@@ -619,17 +645,17 @@ export default function RefinedPortfolio() {
           system.index++;
         });
 
-        // Refined camera orbit
-        const orbitRadius = 52;
+        // Refined camera orbit - adjusted for better Lorenz viewing
+        const orbitRadius = 45; // Reduced from 52 for better framing
         const orbitSpeed = isMobile ? 0.02 : 0.04; // Slower on mobile
-        const baseHeight = 8;
-        const heightVariation = 6;
+        const baseHeight = 5; // Reduced from 8 to better center the view
+        const heightVariation = 4; // Reduced from 6
         
         camera.position.x = orbitRadius * Math.cos(timeRef.current * orbitSpeed);
         camera.position.z = orbitRadius * Math.sin(timeRef.current * orbitSpeed);
         camera.position.y = baseHeight + Math.sin(timeRef.current * orbitSpeed * 0.4) * heightVariation;
         
-        camera.lookAt(0, 0, 0);
+        camera.lookAt(0, 0, 0); // Look at the centered attractor
 
       } else {
         // MANDELBROT ANIMATIONS
@@ -743,8 +769,8 @@ export default function RefinedPortfolio() {
               <div className="hero-section">
                 <div className="title-section">
                   <h1 className={`main-title ${currentThemeConfig.textPrimary}`}>
-                    Hi, I&apos;m{' '}
-                    <span className={`name-gradient ${isDarkTheme ? 'name-gradient-dark' : 'name-gradient-light'}`}>
+                  Hi, I&apos;m{' '}
+                  <span className={`name-gradient ${isDarkTheme ? 'name-gradient-dark' : 'name-gradient-light'}`}>
                       {name}
                     </span>
                   </h1>
@@ -759,16 +785,16 @@ export default function RefinedPortfolio() {
                 
                 {/* Enhanced description */}
                 <p className={`description ${currentThemeConfig.textSecondary}`}>
-                  Follower of <b>P</b>assion, <b>P</b>atience, and <b>P</b>erseverance. Building scalable systems that solve real-world problems.
+                Follower of <b>P</b>assion, <b>P</b>atience, and <b>P</b>erseverance. Building scalable systems that solve real-world problems.
                 </p>
                 
                 {/* Refined CTA buttons */}
                 <div className="button-container">
                   <button className={`button-base button-primary ${currentThemeConfig.buttonPrimary}`}>
-                    <Link href="/about">About Me</Link>
+                  <Link href="/about">About Me</Link>
                   </button>
                   <button className={`button-base button-secondary ${currentThemeConfig.buttonSecondary}`}>
-                    <Link href="/projects">View Projects</Link>
+                  <Link href="/projects">View Projects</Link>
                   </button>
                 </div>
                 
