@@ -206,7 +206,7 @@ export default function ChatBot() {
                     "font-semibold text-sm",
                     isDarkTheme ? "text-white" : "text-gray-900"
                   )}>
-                    Rushabh's AI Assistant
+                    Rushabh;&apops;s AI Assistant
                   </h3>
                   <p className={cn(
                     "text-xs",
