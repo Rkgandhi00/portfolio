@@ -775,7 +775,7 @@ export default function RefinedPortfolio() {
                 {/* Subtle stats or highlights */}
                 <div className="stats-container">
                   <div className="stat-item">
-                    <div className={`stat-number ${currentThemeConfig.textAccent}`}>5+</div>
+                    <div className={`stat-number ${currentThemeConfig.textAccent}`}>6+</div>
                     <div className={`stat-label ${currentThemeConfig.textSecondary}`}>Years Experience</div>
                   </div>
                   <div className="stat-item">
